@@ -1,0 +1,10 @@
+__pycache__/
+*.lck
+*.kicad_prl
+*-backups/
+enclosure/build/
+anatomy/out/
+anatomy/node_modules/
+.DS_Store
+*.blend1
+.brief/

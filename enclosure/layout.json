@@ -1,0 +1,595 @@
+{
+ "doc": "Mini-arcade stand for the landing pad: the shared frame every part builds in.\n\nWrites layout.json. Plain python3, no FreeCAD.\n\nWorld frame, mm: the desk is Z=0, Z up. The player sits at -Y looking toward +Y.\nX is the player's right. The stand is symmetric about X=0.\n\nTwo rigid bodies are placed from the board's own STEP frame (case/build/board.step:\norigin at the board outline's bottom-left, Y up the board, the display and battery on\nthe -Z side, the Feather/TLV/EYESPI on +Z):\n\n  stack  the board with the Feather, TLV, EYESPI, battery and the e-ink. Tilted so the\n         e-ink faces the player, SCREEN_DEG from the desk, the board's top edge (the\n         flex fold) highest. Board +X runs to the player's LEFT, so the plugs on the\n         board's right edge (USB-C, jack, SW1) come out on the player's left.\n  keys   the NeoKey 1x4 on its own deck in front, keys up, DECK_DEG from the desk,\n         falling toward the player. One STEMMA QT cable joins the two.\n\nA board point p = (x, y, z) goes to world P0 + x*BX + y*BY + z*BZ for each body.\n",
+ "screen_deg": 65.0,
+ "deck_deg": 10.0,
+ "x_in": 39.5,
+ "cheek_t": 4.0,
+ "screw": {
+  "m": 2.5,
+  "clear_d": 2.8,
+  "pilot_d": 2.2,
+  "insert_od": 3.6,
+  "head_d": 4.6
+ },
+ "stack": {
+  "p0": [
+   30.53,
+   11.447573658059925,
+   10.661908735953226
+  ],
+  "bx": [
+   -1.0,
+   0.0,
+   0.0
+  ],
+  "by": [
+   0.0,
+   0.42261826174069944,
+   0.9063077870366499
+  ],
+  "bz": [
+   0.0,
+   0.9063077870366499,
+   -0.42261826174069944
+  ],
+  "normal_to_player": [
+   -0.0,
+   -0.9063077870366499,
+   0.42261826174069944
+  ]
+ },
+ "keys": {
+  "p0": [
+   30.53,
+   -32.01179094422471,
+   -4.125204155926085
+  ],
+  "bx": [
+   -1.0,
+   0.0,
+   0.0
+  ],
+  "by": [
+   0.0,
+   0.984807753012208,
+   0.17364817766693033
+  ],
+  "bz": [
+   0.0,
+   0.17364817766693033,
+   -0.984807753012208
+  ],
+  "normal_up": [
+   -0.0,
+   -0.17364817766693033,
+   0.984807753012208
+  ]
+ },
+ "stack_part_bboxes_world": {
+  "PinSocket_1x09_P2.54mm_Vertical_SMD_Pin1Left001": [
+   -11.53,
+   11.53,
+   37.02,
+   45.69,
+   58.6,
+   65.94
+  ],
+  "5613 EYESPI Breakout": [
+   -12.7,
+   12.7,
+   38.16,
+   56.45,
+   55.93,
+   77.07
+  ],
+  "PinSocket_1x10_P2.54mm_Vertical_SMD_Pin1Left001": [
+   -24.86,
+   0.74,
+   13.62,
+   22.3,
+   8.43,
+   15.76
+  ],
+  "R_0805_2012Metric001": [
+   -14.57,
+   -13.37,
+   29.75,
+   31.0,
+   45.95,
+   47.95
+  ],
+  "PinSocket_1x08_P2.54mm_Vertical_SMD_Pin1Left001": [
+   -24.86,
+   -4.34,
+   22.21,
+   30.88,
+   26.84,
+   34.18
+  ],
+  "PinSocket_1x16_P2.54mm_Vertical_SMD_Pin1Left001": [
+   -25.5,
+   15.34,
+   33.48,
+   42.16,
+   51.01,
+   58.35
+  ],
+  "slide-switch-smt-mskt-12c03-Part": [
+   -31.43,
+   -25.43,
+   25.24,
+   29.64,
+   35.85,
+   43.01
+  ],
+  "R_0805_2012Metric003": [
+   -12.03,
+   -10.83,
+   29.75,
+   31.0,
+   45.95,
+   47.95
+  ],
+  "PinSocket_1x12_P2.54mm_Vertical_SMD_Pin1Left001": [
+   -15.34,
+   15.34,
+   24.87,
+   33.54,
+   32.54,
+   39.88
+  ],
+  "R_0805_2012Metric005": [
+   4.48,
+   5.68,
+   30.35,
+   31.6,
+   47.24,
+   49.24
+  ],
+  "6309 TLV320DAC3100 I2S DAC": [
+   -32.27,
+   1.27,
+   22.5,
+   39.2,
+   4.39,
+   30.2
+  ],
+  "6000 Feather RP2350": [
+   -31.68,
+   20.32,
+   34.31,
+   49.75,
+   29.8,
+   53.22
+  ],
+  "PinSocket_1x09_P2.54mm_Vertical_SMD_Pin1Left003": [
+   -11.53,
+   11.53,
+   42.38,
+   51.06,
+   70.11,
+   77.45
+  ],
+  "R_0805_2012Metric007": [
+   -9.49,
+   -8.29,
+   29.75,
+   31.0,
+   45.95,
+   47.95
+  ],
+  "6366 2.13in Tri-Color eInk": [
+   -31.62,
+   30.49,
+   15.53,
+   36.7,
+   47.18,
+   84.98
+  ],
+  "2011 2000mAh Battery": [
+   -18.5,
+   18.5,
+   7.98,
+   40.15,
+   18.02,
+   75.57
+  ],
+  "landing-pad_copper019": [
+   -26.13,
+   19.42,
+   13.75,
+   42.7,
+   12.01,
+   74.06
+  ],
+  "landing-pad_pad075": [
+   -27.18,
+   14.47,
+   13.43,
+   44.43,
+   11.32,
+   77.73
+  ],
+  "landing-pad_silkscreen165": [
+   -30.48,
+   25.79,
+   13.49,
+   43.94,
+   11.31,
+   76.61
+  ]
+ },
+ "neokey_bbox_world": [
+  -38.1,
+  38.1,
+  -26.63,
+  -4.58,
+  4.66,
+  12.88
+ ],
+ "display": {
+  "glass_corners_world": [
+   [
+    29.496,
+    17.706,
+    53.972
+   ],
+   [
+    -29.686,
+    17.706,
+    53.972
+   ],
+   [
+    -29.686,
+    30.062,
+    80.467
+   ],
+   [
+    29.496,
+    30.062,
+    80.467
+   ]
+  ],
+  "active_corners_world": [
+   [
+    27.047,
+    18.79,
+    56.236
+   ],
+   [
+    -21.937,
+    18.79,
+    56.236
+   ],
+   [
+    -21.937,
+    29.002,
+    78.135
+   ],
+   [
+    27.047,
+    29.002,
+    78.135
+   ]
+  ],
+  "glass_face_z_board": -12.631,
+  "pcb_front_z_board": -11.085,
+  "holes_world_on_pcb_front": [
+   [
+    27.94,
+    18.002,
+    50.946
+   ],
+   [
+    27.94,
+    32.493,
+    82.024
+   ],
+   [
+    -27.94,
+    18.002,
+    50.946
+   ],
+   [
+    -27.94,
+    32.493,
+    82.024
+   ]
+  ],
+  "note": "Each hole is an M2.5 through the display PCB, lined up with a board hole (H1-H4) and a brass standoff between display and board. A longer screw from the front can go through a bezel boss, the display and into the standoff. Screw heads sit proud of the display PCB front, so a bezel touching the PCB front needs a 5.5 mm pocket at each hole."
+ },
+ "board_holes_world": {
+  "H5": {
+   "on_board_bottom": [
+    -27.94,
+    32.481,
+    55.769
+   ],
+   "on_board_top": [
+    -27.94,
+    33.931,
+    55.093
+   ],
+   "note": "back side: battery is clear of these"
+  },
+  "H6": {
+   "on_board_bottom": [
+    -27.94,
+    13.159,
+    14.332
+   ],
+   "on_board_top": [
+    -27.94,
+    14.609,
+    13.656
+   ],
+   "note": "back side: battery is clear of these"
+  },
+  "H7": {
+   "on_board_bottom": [
+    27.94,
+    13.159,
+    14.332
+   ],
+   "on_board_top": [
+    27.94,
+    14.609,
+    13.656
+   ],
+   "note": "back side: battery is clear of these"
+  }
+ },
+ "stack_bottom_edge_world": [
+  [
+   30.48,
+   11.448,
+   10.662
+  ],
+  [
+   -30.48,
+   11.448,
+   10.662
+  ]
+ ],
+ "stack_top_edge_world": [
+  [
+   30.48,
+   43.613,
+   79.641
+  ],
+  [
+   -30.48,
+   43.613,
+   79.641
+  ]
+ ],
+ "ports_world": {
+  "usb_c": {
+   "mouth": [
+    -31.68,
+    42.024,
+    41.521
+   ],
+   "axis": [
+    -1,
+    0,
+    0
+   ],
+   "keepout_d": 14.0,
+   "note": "plug overmold ~12.4 x 6.5; keep the cheek clear of a 14 mm circle round this axis"
+  },
+  "jack": {
+   "mouth": [
+    -32.27,
+    33.09,
+    20.729
+   ],
+   "axis": [
+    -1,
+    0,
+    0
+   ],
+   "keepout_d": 11.0
+  },
+  "sw1_knob": {
+   "centre": [
+    -30.78,
+    27.76,
+    40.096
+   ],
+   "axis": [
+    -1,
+    0,
+    0
+   ],
+   "keepout_d": 9.0,
+   "note": "finger room to slide it"
+  },
+  "feather_qt": {
+   "mouth": [
+    6.76,
+    44.593,
+    40.665
+   ],
+   "note": "opens away from the board (+Z board = back/down in world); the QT cable to the NeoKey leaves here"
+  }
+ },
+ "keys_world": {
+  "switch_centres_on_face": [
+   [
+    28.575,
+    -16.0,
+    11.0
+   ],
+   [
+    9.525,
+    -16.0,
+    11.0
+   ],
+   [
+    -9.525,
+    -16.0,
+    11.0
+   ],
+   [
+    -28.575,
+    -16.0,
+    11.0
+   ]
+  ],
+  "plate_top_centres": [
+   [
+    28.575,
+    -16.868,
+    15.924
+   ],
+   [
+    9.525,
+    -16.868,
+    15.924
+   ],
+   [
+    -9.525,
+    -16.868,
+    15.924
+   ],
+   [
+    -28.575,
+    -16.868,
+    15.924
+   ]
+  ],
+  "keycap_top_centres": [
+   [
+    28.575,
+    -19.733,
+    32.173
+   ],
+   [
+    9.525,
+    -19.733,
+    32.173
+   ],
+   [
+    -9.525,
+    -19.733,
+    32.173
+   ],
+   [
+    -28.575,
+    -19.733,
+    32.173
+   ]
+  ],
+  "plate_thickness": 1.5,
+  "hole": 14.0,
+  "neokey_holes_on_face": [
+   [
+    19.05,
+    -24.13,
+    9.567
+   ],
+   [
+    19.05,
+    -7.87,
+    12.433
+   ],
+   [
+    -19.05,
+    -24.13,
+    9.567
+   ],
+   [
+    -19.05,
+    -7.87,
+    12.433
+   ]
+  ],
+  "neokey_qt": [
+   [
+    35.56,
+    -18.597,
+    7.445
+   ],
+   [
+    -35.56,
+    -18.597,
+    7.445
+   ]
+  ],
+  "note": "NeoKey holes are 2.5 mm (M2.5 tight / M2 clear). The plate sits 5.0 off the NeoKey face with 3.5 mm standoffs at these holes."
+ },
+ "joints": {
+  "bezel_top_L": [
+   -39.5,
+   31.347,
+   82.558
+  ],
+  "bezel_bottom_L": [
+   -39.5,
+   2.368,
+   20.413
+  ],
+  "deck_back_L": [
+   -39.5,
+   -5.506,
+   17.166
+  ],
+  "deck_front_L": [
+   -39.5,
+   -27.96,
+   13.207
+  ],
+  "foot_front_L": [
+   -39.5,
+   -30.0,
+   6.0
+  ],
+  "foot_rear_L": [
+   -39.5,
+   50.0,
+   6.0
+  ],
+  "top_rear_L": [
+   -39.5,
+   62.0,
+   66.0
+  ],
+  "bezel_top_R": [
+   39.5,
+   31.347,
+   82.558
+  ],
+  "bezel_bottom_R": [
+   39.5,
+   2.368,
+   20.413
+  ],
+  "deck_back_R": [
+   39.5,
+   -5.506,
+   17.166
+  ],
+  "deck_front_R": [
+   39.5,
+   -27.96,
+   13.207
+  ],
+  "foot_front_R": [
+   39.5,
+   -30.0,
+   6.0
+  ],
+  "foot_rear_R": [
+   39.5,
+   50.0,
+   6.0
+  ],
+  "top_rear_R": [
+   39.5,
+   62.0,
+   66.0
+  ]
+ },
+ "joints_note": "Owners: bezel_* = bezel.py, deck_* = deck.py, foot_*/top_rear_* = braces.py; cheeks.py takes every joint. Each boss on the owning part is a cylinder along X, od 6.0, ending flush at x=+-X_IN, pilot 2.2 x 6 deep. The cheek gets a 2.8 clear hole and a 4.8 x 1.5 counterbore on its outer face, with >= 3.5 mm of cheek material round each hole."
+}

@@ -1,0 +1,28 @@
+(version 1)
+# An 0805's pads are 0.8 mm apart, so the 0.4 track it hops keeps 0.2.
+(rule "0805 jumpers"
+	(condition "A.memberOfFootprint('R*') || B.memberOfFootprint('R*')")
+	(constraint clearance (min 0.2mm)))
+# M2.5 screw heads (4.5 mm) reach 0.9 past the 2.7 mm holes.
+(rule "screw heads"
+	(condition "A.memberOfFootprint('H*') || B.memberOfFootprint('H*')")
+	(constraint hole_clearance (min 1.0mm)))
+# The GND fill runs to 0.1 of a hole (under the head) and of the edge, so it
+# rings the board unbroken. Everything else keeps 0.4 to the holes' copper-free
+# pads and 0.5 to the edge.
+(rule "screw head on fill"
+	(condition "(A.memberOfFootprint('H*') && B.Type == 'Zone') || (B.memberOfFootprint('H*') && A.Type == 'Zone')")
+	(constraint hole_clearance (min 0.1mm))
+	(constraint clearance (min 0.1mm)))
+(rule "holes, not fill"
+	(condition "(A.memberOfFootprint('H*') && B.Type != 'Zone') || (B.memberOfFootprint('H*') && A.Type != 'Zone')")
+	(constraint clearance (min 0.4mm)))
+(rule "edge, not fill"
+	(condition "A.Type != 'Zone' && B.Type != 'Zone'")
+	(constraint edge_clearance (min 0.5mm)))
+# 0R jumpers sit under the breakouts (they ride 8.5 mm up). H2/H5 are the
+# Feather's and TLV's own holes, so their courtyards meet the sockets'.
+(rule "jumpers and holes"
+	(condition "A.Reference == 'R*' || A.Reference == 'H*' || B.Reference == 'R*' || B.Reference == 'H*'")
+	(constraint courtyard_clearance)
+	(severity ignore))

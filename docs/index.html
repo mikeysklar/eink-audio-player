@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-ink Audio Player</title>
+<meta name="description" content="A palm-sized MP3 player with a quad-colour e-ink screen, built from Adafruit boards and a 3D-printed stand.">
+<style>
+:root {
+  --bg: #f6f5f1;
+  --fg: #1d1d1b;
+  --muted: #5d5c57;
+  --rule: #d6d4cc;
+  --card: #ffffff;
+  --link: #0b5cad;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161614;
+    --fg: #ecebe6;
+    --muted: #a7a59d;
+    --rule: #3a3935;
+    --card: #1f1f1c;
+    --link: #7ab8ff;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161614;
+  --fg: #ecebe6;
+  --muted: #a7a59d;
+  --rule: #3a3935;
+  --card: #1f1f1c;
+  --link: #7ab8ff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+}
+h1 { font-size: 2.2rem; margin: 0 0 4px; line-height: 1.15; }
+h2 { font-size: 1.35rem; margin: 0 0 12px; }
+p { margin: 0 0 12px; }
+.lede { font-size: 1.1rem; color: var(--muted); margin: 0 0 8px; }
+a { color: var(--link); }
+section {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+figure { margin: 0 0 20px; }
+figure img, figure video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: var(--card);
+}
+figcaption { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.grid figure { margin: 0; }
+@media (min-width: 640px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  .grid.three { grid-template-columns: 1fr 1fr 1fr; }
+}
+ul.downloads { list-style: none; padding: 0; margin: 0; }
+ul.downloads li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+}
+ul.downloads li:last-child { border-bottom: 0; }
+ul.downloads span { color: var(--muted); font-size: 0.95rem; display: block; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <h1>E-ink Audio Player</h1>
+  <p class="lede">A palm-sized MP3 player with a quad-colour e-ink screen, four keys, and a 3D-printed stand.</p>
+</header>
+
+<section>
+  <h2>The stand, turning</h2>
+  <figure>
+    <video src="media/blender/turntable.mp4" poster="media/blender/hero.png" autoplay muted loop playsinline controls></video>
+    <figcaption>The assembled stand and boards, one slow turn.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Break apart</h2>
+  <figure>
+    <video src="media/blender/explode.mp4" poster="media/blender/exploded.png" autoplay muted loop playsinline controls></video>
+    <figcaption>Every part flies apart and comes back together.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>The board on its own</h2>
+  <figure>
+    <video src="media/blender/board-turntable.mp4" poster="media/blender/board-hero.png" autoplay muted loop playsinline controls></video>
+    <figcaption>The landing pad with the four boards plugged in, one slow turn.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Circuit anatomy</h2>
+  <figure>
+    <video src="media/anatomy/eink-audio-player.mp4" autoplay muted loop playsinline controls></video>
+    <figcaption>How the boards, cables and parts fit together.</figcaption>
+  </figure>
+  <p><a href="anatomy.html">Open the interactive version</a></p>
+</section>
+
+<section>
+  <h2>Schematic</h2>
+  <figure>
+    <a href="media/kicad/schematic.svg">
+      <img src="media/kicad/schematic.svg" alt="Schematic of the eink-audio-player circuit">
+    </a>
+    <figcaption>Click the schematic for full size.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Landing pad PCB</h2>
+  <figure>
+    <img src="media/kicad/pcb-copper.png" alt="Copper layer of the landing pad PCB">
+    <figcaption>Single-sided, top copper only, GND fill.</figcaption>
+  </figure>
+  <div class="grid three">
+    <figure>
+      <img src="media/kicad/pcb-3d-top.png" alt="Landing pad PCB, 3D view from the top">
+      <figcaption>Top</figcaption>
+    </figure>
+    <figure>
+      <img src="media/kicad/pcb-3d-iso.png" alt="Landing pad PCB, 3D isometric view">
+      <figcaption>Isometric</figcaption>
+    </figure>
+    <figure>
+      <img src="media/kicad/pcb-3d-back.png" alt="Landing pad PCB, 3D view from the back">
+      <figcaption>Back</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>Printed parts</h2>
+  <figure>
+    <img src="media/enclosure/parts-sheet.png" alt="Sheet of every 3D-printed part, labelled">
+    <figcaption>Every printed part, labelled.</figcaption>
+  </figure>
+  <figure>
+    <img src="media/enclosure/assembly.png" alt="How the printed parts assemble">
+    <figcaption>How the parts go together.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Downloads</h2>
+  <ul class="downloads">
+    <li>
+      <a href="https://github.com/mikeysklar/eink-audio-player/tree/main/kicad">KiCad project</a>
+      <span>Schematic and board files.</span>
+    </li>
+    <li>
+      <a href="https://github.com/mikeysklar/eink-audio-player/tree/main/enclosure">Enclosure</a>
+      <span>FreeCAD sources and the full model.</span>
+    </li>
+    <li>
+      <a href="https://github.com/mikeysklar/eink-audio-player/tree/main/enclosure/stl">STL files</a>
+      <span>Ready to slice and print.</span>
+    </li>
+    <li>
+      <a href="https://github.com/mikeysklar/eink-audio-player/tree/main/blender">Blender</a>
+      <span>Scene scripts used for the renders.</span>
+    </li>
+    <li>
+      <a href="https://github.com/mikeysklar/eink-audio-player/tree/main/anatomy">Anatomy</a>
+      <span>Build sources for the anatomy figure.</span>
+    </li>
+    <li>
+      <a href="https://github.com/mikeysklar/eink-audio-player/blob/main/docs/HARDWARE.md">Hardware notes</a>
+      <span>Parts list and wiring.</span>
+    </li>
+    <li>
+      <a href="https://github.com/mikeysklar/eink-audio-player/blob/main/docs/DESIGN.md">Design notes</a>
+      <span>How the parts were chosen and laid out.</span>
+    </li>
+    <li>
+      <a href="https://github.com/mikeysklar/eink-audio-player/blob/main/docs/PRINTING.md">Printing notes</a>
+      <span>Print settings for the stand.</span>
+    </li>
+  </ul>
+</section>
+
+</main>
+</body>
+</html>

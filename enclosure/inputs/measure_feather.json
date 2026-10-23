@@ -1,0 +1,22 @@
+{
+  "usb_c": {
+    "bbox": [54.31, 62.21, 36.42, 45.36, 12.07, 16.28],
+    "mouth_dir": "+X",
+    "notes": "USB-C receptacle shell (source part USB_C_CUSB31-CFM2AX-01-X, solid 147 in board.step, 7.9 x 8.94 x 4.2 mm). Mouth is a 0.2 mm recessed opening in the +X face at X=62.21, spanning Y 36.57..45.21 and Z 13.21..16.12. Mouth centre: Y=40.89, Z=14.67 (Z centre is above the shell bbox centre of 14.18). Confidence high for bbox and mouth face; high for mouth centre (read from the face hole, not estimated)."
+  },
+  "stemma_qt": {
+    "bbox": [20.77, 26.77, 39.75, 43.35, 13.06, 17.36],
+    "mouth_dir": "+Z",
+    "notes": "STEMMA QT / JST-SH 4-pin (source JST_SH4_RA, 7 solids). Bbox is the whole group including legs. Housing body alone: X 20.77..26.77, Y 39.75..42.65, Z 13.11..17.37. The only opening in the STEP geometry is a hole in the top (+Z) face at Z=17.36, spanning X 21.22..26.32 and Y 40.05..42.35 (mouth centre X=23.77, Y=41.2). Cable would plug in from above, away from the board. Caveat: the part name says RA (right-angle), but the modelled opening is on +Z, so a side-entry cable would not match the model. Confidence medium. A 3-pin JST_SH3_RA sits at X 21.04..26.04, Y 45.08..48.68, Z 13.06..17.39 and is a separate connector; not used here. Its identity as STEMMA QT is an assumption (the 4-pin is the usual QT on Feather boards)."
+  },
+  "buttons": {
+    "bbox": [42.89, 53.80, 45.61, 48.85, 13.06, 15.58],
+    "mouth_dir": null,
+    "notes": "Two tact switches BTN_RKB2 4.6 x 2.8 mm, each 4.5 x 3.24 x 2.51. Individual bboxes: button A (source X 7.21..18.12, i.e. global X 49.30..53.80): X 49.30..53.80, Y 45.61..48.85, Z 13.06..15.58. Button B (global X 42.89..47.38): X 42.89..47.38, Y 45.61..48.85, Z 13.06..15.58. Reset vs boot is NOT identified: the STEP only has generic labels (BTN_RKB2_4.6X2.8 and BTN_RKB2_4.6X2.001), so the mapping of A and B to RESET and BOOT is unknown. Confidence high on geometry, none on which is which. Not included: SOT23-5 parts at similar Z that I first mistook for buttons (3.0 x 3.0 x 1.4 mm)."
+  },
+  "jst_ph": {
+    "bbox": [46.14, 54.04, 29.90, 38.50, 13.06, 17.86],
+    "mouth_dir": "+Y",
+    "notes": "LiPo JST-PH 2-pin battery (source JSTPH2_BATT, 5 solids). Body block X 46.14..54.04, Y 29.90..37.50, Z 13.06..17.86. The shroud walls reach Y 38.50, 1 mm past the block, and the plug mouth sits between them, so the mouth faces +Y, toward the Feather interior. Pins/holes on the block faces are only 0.5 mm square and do not show a large mouth opening. Confidence low to medium on direction, high on bbox. Recommend a render check before using mouth_dir for the case cutout."
+  }
+}

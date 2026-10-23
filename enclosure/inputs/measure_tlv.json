@@ -1,0 +1,16 @@
+{
+ "jack": {
+  "name": "PJ-332A 3.5 mm headphone jack",
+  "bbox": [48.8, 62.8, 15.07, 21.47, 12.46, 18.07],
+  "mouth_center_yz": [18.27, 15.36],
+  "barrel_d": 5.0,
+  "mouth_dir": "+X"
+ },
+ "others": [
+  {
+   "name": "JST PH 2-pin connector (JSTPH002 housing, speaker terminal)",
+   "bbox": [52.99, 60.59, 6.58, 14.48, 13.06, 17.86],
+   "mouth_dir": "-X"
+  }
+ ]
+}
