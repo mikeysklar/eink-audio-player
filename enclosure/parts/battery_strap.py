@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 # Battery strap: a ladder across the LiPo's lower half, where the display does not cover
 # it. Two cross bars hold it against the board, two tabs stop it sliding down the 65 deg
 # slope (the gap between them lets the leads out), and the end plates sit on the back of

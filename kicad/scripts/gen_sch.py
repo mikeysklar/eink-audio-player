@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 # Writes its output next to itself (scripts/). Used to generate the schematic from subnets.json; copy the output into kicad/ to use it.
 """
 Write eink-audio-player.kicad_sch from subnets.json (written by build_pcb.py)

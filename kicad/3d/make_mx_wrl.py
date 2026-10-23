@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 """Write "Cherry MX keycap.wrl": one MX-style switch and an OEM-ish keycap,
 for the 3D view only. Adafruit_CAD_Parts has no MX model, so this is blocks
 from Cherry's datasheet sizes: bottom housing 14 x 14 below the plate line

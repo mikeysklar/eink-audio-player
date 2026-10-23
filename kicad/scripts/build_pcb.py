@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 # Writes its outputs next to itself (scripts/). Used to generate the board; copy the outputs into kicad/ to use them.
 """Placement-only layout for the Feather RP2350 audio landing pad.
 

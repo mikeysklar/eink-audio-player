@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 """FreeCAD helpers shared by every part script. Import from a freecadcmd script:
 
     import os, sys; sys.path.insert(0, os.environ.get("EAP_ROOT") or os.path.dirname(os.path.abspath(__file__)))

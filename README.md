@@ -82,4 +82,4 @@ anatomy/       anatomy build sources
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT-0 (MIT No Attribution). See [LICENSE](LICENSE).

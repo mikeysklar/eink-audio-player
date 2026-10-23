@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 # Checker only, writes no files. Used while planning the routes, before running KiCad DRC.
 """Clearance, connectivity and preview for the hand-planned routes in plan.py.
 

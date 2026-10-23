@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 # Key deck: the MX switch plate (1.5 thick, top 5.0 off the NeoKey face, 14.1 holes), four
 # standoffs the NeoKey screws up into, a rib along the front edge (the back edge meets the
 # bezel chin, so it has none), and end bosses for the cheeks. Built flat in the NeoKey's

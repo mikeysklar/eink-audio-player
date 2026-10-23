@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 """Mini-arcade stand for the landing pad: the shared frame every part builds in.
 
 Writes layout.json. Plain python3, no FreeCAD.

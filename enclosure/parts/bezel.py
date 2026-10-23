@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
 # Screen bezel: a frame over the e-ink, two stiles down the sides to the cheeks, and a
 # chin under the board's bottom edge that the tilted stack rests on. The four display
 # screws go through it (longer M2.5s into the brass standoffs), so it carries the stack.
