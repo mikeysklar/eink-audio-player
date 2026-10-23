@@ -4,7 +4,11 @@ A palm-sized MP3 player with a 2.13 inch e-ink screen and four physical keys. Si
 
 Docs: [Hardware](docs/HARDWARE.md) · [Design](docs/DESIGN.md) · [Printing](docs/PRINTING.md)
 
-![turntable](docs/media/blender/turntable.gif)
+![break apart](docs/media/blender/explode.gif)
+
+![anatomy](docs/media/anatomy/eink-audio-player.gif)
+
+Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.io/eink-audio-player/anatomy.html).
 
 ## How it works
 
@@ -13,10 +17,6 @@ Docs: [Hardware](docs/HARDWARE.md) · [Design](docs/DESIGN.md) · [Printing](doc
 - The 2.13 inch quad-colour e-ink screen shows the artist and track.
 - A NeoKey 1x4 on STEMMA QT gives next, previous, play and artist.
 - A 2000 mAh LiPo powers it. A slide switch turns it on and off.
-
-![anatomy](docs/media/anatomy/eink-audio-player.gif)
-
-Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.io/eink-audio-player/anatomy.html).
 
 ## The board
 
@@ -33,14 +33,14 @@ The four boards plug into one single-sided milled PCB. It has top copper only, 0
 ![board turntable](docs/media/blender/board-turntable.gif)
 
 - `kicad/` has the KiCad project and the 3D models it uses.
-- `kicad/fab/` has the Gerber and drill files for the board house.
+- `kicad/fab/` has the Gerber and drill files for milling or a board house.
 - `kicad/scripts/` has the scripts that generate the board and check the layout plan.
 
 ## The stand
 
 A minimal "mini arcade" skeleton. The screen tilts back 65 degrees. The keys sit on their own deck in front, at 10 degrees. Two red cheeks join the parts, held with M2.5 screws.
 
-![explode](docs/media/blender/explode.gif)
+![turntable](docs/media/blender/turntable.gif)
 
 ![assembly](docs/media/enclosure/assembly.png)
 
