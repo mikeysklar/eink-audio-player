@@ -31,8 +31,8 @@ Grams are an upper bound: 100% solid PLA at 1.24 g/cm3. A printed part with wall
 ## Heat inserts
 
 Twelve M2.5 brass heat inserts, 3.3 mm across and 3.3 mm long, go in once with a
-soldering iron, at the temperature your inserts call for. The holes are 3.1 mm across
-and 3.8 mm deep:
+soldering iron, at the temperature your inserts call for. The holes are 3.3 mm across
+and 3.3 mm deep, the insert's own size:
 
 - bezel: 4 on the back face (the display screws) and 1 in each top boss end
 - deck: 1 in each front boss end, and 2 in the standoffs on one diagonal

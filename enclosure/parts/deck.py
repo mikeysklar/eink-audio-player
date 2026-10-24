@@ -27,7 +27,7 @@ PILOT_D, PILOT_DEPTH = 2.2, 6.0
 PL_TOP, PL_BOT = FACE - 5.0, FACE - 3.5              # plate faces, -17.115 / -15.615
 Y0, Y1 = JY_FRONT - BOSS_R, JY_BACK + BOSS_R
 HOLE = 14.1
-SO_R, SO_R_INSERT = 2.2, 2.65                        # pin standoffs od 4.4, insert ones 5.3
+SO_R, SO_R_INSERT = 2.2, 2.75                        # pin standoffs od 4.4, insert ones 5.5
 PIN_D, PIN_LEN = 2.2, 1.4                            # into the NeoKey's 2.5 holes
 RIB_W, RIB_D = 1.6, 1.6                              # 0.3 above the front foot bar
 X_AXIS = App.Vector(1, 0, 0)
@@ -56,7 +56,7 @@ for x, y in NK["key_centres"]:
     shape = shape.cut(box(x - HOLE / 2, x + HOLE / 2, y - HOLE / 2, y + HOLE / 2,
                           PL_TOP - 1, PL_BOT + 1))
 for x, y in SCREWED:
-    shape = shape.cut(ac.insert_hole((x, y, FACE - 0.05), (0, 0, -1), extra=0.8))
+    shape = shape.cut(ac.insert_hole((x, y, FACE - 0.05), (0, 0, -1), extra=1.3))
 # Front bosses: heat inserts. Back bosses: pegs for the cheek slots.
 shape = shape.cut(ac.insert_hole((BX_R, JY_FRONT, JZ), (1, 0, 0)))
 shape = shape.cut(ac.insert_hole((BX_L, JY_FRONT, JZ), (-1, 0, 0)))

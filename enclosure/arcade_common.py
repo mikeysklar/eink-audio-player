@@ -33,7 +33,7 @@ STEP = os.path.join(HERE, "inputs", "board.step")
 # INSERT_D x INSERT_DEPTH holes with a PILOT_D hole past them for the screw tip. Parts
 # that sit between the cheeks stop END_GAP short of each inner face; a STUB_D x STUB_LEN
 # peg on a boss end drops into a SLOT_W x SLOT_DEPTH slot on the cheek's inner face.
-INSERT_D, INSERT_DEPTH, INSERT_OD, INSERT_LEN = 3.1, 3.8, 3.3, 3.3
+INSERT_D, INSERT_DEPTH, INSERT_OD, INSERT_LEN = 3.3, 3.3, 3.3, 3.3
 PILOT_D = 2.2
 END_GAP = 0.25
 STUB_D, STUB_LEN = 4.0, 1.2

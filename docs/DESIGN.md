@@ -71,7 +71,7 @@ The stand is a skeleton. It has no walls. The screen and the keys sit on two sep
 
 - The chassis is one print: two cheeks, 4 mm thick, with inner faces at x = +-39.5, the front and rear foot bars, and the ANO mount.
 - Everything between the cheeks stops 0.25 mm short of each inner face.
-- The bezel and the deck each have four bosses, 6.0 mm across, at the layout joints. On each part, one pair of bosses takes heat inserts (3.1 mm holes, 3.8 mm deep), and the other pair has 4.0 mm pegs, 1.2 mm long.
+- The bezel and the deck each have four bosses, 6.0 mm across, at the layout joints. On each part, one pair of bosses takes heat inserts (3.3 mm holes, 3.3 mm deep), and the other pair has 4.0 mm pegs, 1.2 mm long.
 - The pegs sit in slots on the cheeks' inner faces, 4.4 mm wide and 1.5 mm deep. The bezel's slots open toward the player, the way the bezel slides in. The deck's open straight up, the way the deck drops in.
 - At the insert bosses, each cheek has a 2.8 mm clear hole and a 4.8 x 1.5 mm counterbore on its outer face, for an M2.5 x 8.
 - The handle pushes through a 7.4 mm hole in the left cheek and snaps into a 4.0 mm hole in the right one.
@@ -83,7 +83,7 @@ The stand is a skeleton. It has no walls. The screen and the keys sit on two sep
 - Deck: the MX switch plate, 5.0 mm above the NeoKey face, with four standoffs and a front rib. Two standoffs take inserts and two carry pins into the NeoKey's holes. Its back bosses sit under the bezel chin, which keeps them down. The MX spec hole is 14.0 mm. The deck prints it at 14.1 mm to allow for FDM holes printing small.
 - Handle: a 7 mm rod with a flange on the left and a split, barbed snap on the right.
 - ANO mount, part of the chassis: holds the ANO rotary encoder (6310) for the thumb, past the right end of the keys and toward the player, at the keys' 10 degrees. The wheel centre is 35 mm right of the last key and 39 mm closer, and sits 12 mm below the keycap tops. An arm joins it to the right cheek's outer face, with an open bore over the right front deck screw. Four standoffs carry the ANO, two with inserts and two with pins, and the front rail runs to the desk so a press does not lever the stand. The ANO's STEMMA QT port faces the stand, so the cable from the NeoKey's right port runs through the cheek window.
-- Min wall is 1.6 mm, for printing with a 0.4 mm nozzle, and 1.1 mm round the inserts. Clearance to the real parts is 0.3 mm or more.
+- Min wall is 1.6 mm, for printing with a 0.4 mm nozzle, and 1.1 mm round the inserts in the bosses and standoffs. The two top display inserts in the bezel sit 0.5 mm from the glass pocket. Clearance to the real parts is 0.3 mm or more.
 
 ### Checks in assemble_arcade.py
 

@@ -108,8 +108,8 @@ The stand is a mini arcade: the screen tilts back, and the keys sit on their own
 front. It is five printed parts held by 12 M2.5 socket head screws, each into a brass heat
 insert (3.3 mm across, 3.3 mm long). The inserts go in once, with a soldering iron, so
 the stand comes apart and goes back together as often as you like. Each insert hole is
-3.1 mm across and 3.8 mm deep, with a 2.2 mm hole past it for the screw tip. The walls
-round each insert are 1.1 mm or more.
+3.3 mm across and 3.3 mm deep, with a 2.2 mm hole past it for the screw tip. The walls
+round the inserts in the bosses and standoffs are 1.1 mm or more.
 
 ### What holds what
 

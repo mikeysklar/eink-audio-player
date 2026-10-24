@@ -9,6 +9,11 @@
 // eink-audio-player.kicad_pcb: tracks, pads, zone fills, footprints) and solids.json
 // (solids.py over case/build/board.step: every solid's global bounding box). Frame:
 // STEP frame, x east, y north (board bottom-left at 0,0), z up, board top at 1.51.
+//
+// Pose: as on the stand (enclosure/layout.json), seen from behind and to the left, the
+// way the Blender renders show the back. Everything is drawn in the board's frame, from
+// the camera direction that pose gives, and the whole figure is then turned flat in 2D so
+// the desk is level. The NeoKey and the ANO keep their stand pose relative to the board.
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -53,10 +58,17 @@ const ANO = { x0: -53.61, x1: -12.97, y0: -36.27, y1: -0.71, cx: -33.285, cy: -1
 const LIFT = 28;                 // top-side boards come straight up off their sockets
 const DROP = 20;                 // the LiPo drops straight down
 const D_HINGE = [78.5, -4.0];     // the e-ink swings open about the flex at the top edge
-const K_HINGE = [-4.0, -16.0];     // where the NeoKey ends up: as if turned over the bottom edge, keys up
-// It travels on its own centre and turns about it, so it never swings wide.
-const K_C0 = [18.395, -21.16];
-const K_C1 = (() => { const [, y, z] = rotYZ([0, ...K_C0], K_HINGE, -Math.PI); return [y, z]; })();
+// The stand: board ("stack") and NeoKey ("keys") body frames, world mm, desk Z=0, player at -Y.
+const LAYOUT = JSON.parse(readFileSync(join(HERE, "..", "enclosure", "layout.json"), "utf8"));
+const SB = LAYOUT.stack, KB = LAYOUT.keys;
+const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const toBoard = (w) => [dot3(SB.bx, w), dot3(SB.by, w), dot3(SB.bz, w)];   // a world direction
+// The NeoKey (and the ANO, in its frame) relative to the board: a turn about x and a shift.
+const K_A = Math.atan2(dot3(SB.bz, KB.by), dot3(SB.by, KB.by));
+const K_T = toBoard(KB.p0.map((v, i) => v - SB.p0[i]));
+// Taken apart, the keys and the ANO slide out together to the player's left, and up.
+const K_OUT = toBoard([-95, 0, 15]);
+const kPose = (p, m) => { const q = rotYZ(p, [0, 0], K_A); return q.map((v, i) => v + K_T[i] + K_OUT[i] * m); };
 
 const footprint = (ref) => pcb.footprints.find((f) => f.ref === ref);
 const padsOf = (ref) => pcb.pads.filter((p) => p.ref === ref && p.num);
@@ -90,7 +102,6 @@ function rotYZ([x, y, z], [hy, hz], a) {
   return [x, hy + dy * c - dz * s, hz + dy * s + dz * c];
 }
 const smooth = (t) => { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); };
-const kMove = (t) => smooth(t / 0.6), kTurn = (t) => smooth((t - 0.25) / 0.75);
 const corners = (b) => [0, 1].flatMap((i) => [2, 3].flatMap((j) => [4, 5].map((m) => [b[i], b[j], b[m]])));
 const DISPLAY_BB = [0.04, 62.15, 36.74, 76.11, -12.631, -7.627];
 const NEOKEY_BB = [-7.57, 68.63, 7.6, 29.19, -33.615, -8.71];
@@ -104,19 +115,44 @@ const fitPts = [
 ];
 for (let a = 0; a <= 180; a += 10) {
   fitPts.push(...corners(DISPLAY_BB).map((p) => rotYZ(p, D_HINGE, (a * Math.PI) / 180)));
-  const t = a / 180, m = kMove(t);
-  fitPts.push(...[NEOKEY_BB, ANO_BB].flatMap(corners).map((p) => { const q = rotYZ(p, K_C0, -Math.PI * kTurn(t)); return [q[0], q[1] + (K_C1[0] - K_C0[0]) * m, q[2] + (K_C1[1] - K_C0[1]) * m]; }));
+  fitPts.push(...[NEOKEY_BB, ANO_BB].flatMap(corners).map((p) => kPose(p, a / 180)));
 }
-const CAM = { azimuth: 38, elevation: 30 };
-const unitP = k.fitProjection(fitPts.map(W3), 1000, 1000, { pad: 0, ...CAM });
-{
-  const flat = fitPts.map((p) => k.iso(W3(p), unitP));
-  const w = Math.max(...flat.map((p) => p[0])) - Math.min(...flat.map((p) => p[0]));
-  const h = Math.max(...flat.map((p) => p[1])) - Math.min(...flat.map((p) => p[1]));
-  globalThis.HEIGHT = Math.round(((WIDTH - 28) * h) / w + 28);
-}
-const HEIGHT = globalThis.HEIGHT;
-const P = k.fitProjection(fitPts.map(W3), WIDTH, HEIGHT, { pad: 14, ...CAM });
+// Camera: from behind the stand and to the player's left (world toward-viewer vector V_W).
+// In the board's frame that is the kit camera CAM; TURN is the 2D map from that view to
+// the world view (same direction, so a pure turn), which levels the desk.
+const deg = Math.PI / 180;
+const V_W = [-Math.sin(35 * deg) * Math.cos(25 * deg), Math.cos(35 * deg) * Math.cos(25 * deg), Math.sin(25 * deg)];
+const vb = toBoard(V_W);
+const CAM = { azimuth: Math.atan2(-vb[1], vb[0]) / deg, elevation: Math.asin(vb[2]) / deg };
+const CAM_W = { azimuth: Math.atan2(-V_W[1], V_W[0]) / deg, elevation: Math.asin(V_W[2]) / deg };
+const TURN = (() => {
+  const pb = { origin: [0, 0], scale: 1, ...CAM }, pw = { origin: [0, 0], scale: 1, ...CAM_W };
+  const world = (p) => [0, 1, 2].map((i) => SB.p0[i] + p[0] * SB.bx[i] + p[1] * SB.by[i] + p[2] * SB.bz[i]);
+  const b = (p) => k.iso(W3(p), pb), w = (p) => k.iso(W3(world(p)), pw);
+  const sub = (a, c) => [a[0] - c[0], a[1] - c[1]];
+  const o = [0, 0, 0], ex = [10, 0, 0], ey = [0, 10, 0];
+  const b1 = sub(b(ex), b(o)), b2 = sub(b(ey), b(o)), w1 = sub(w(ex), w(o)), w2 = sub(w(ey), w(o));
+  const det = b1[0] * b2[1] - b2[0] * b1[1];
+  const inv = [[b2[1] / det, -b2[0] / det], [-b1[1] / det, b1[0] / det]];
+  const A = [[w1[0] * inv[0][0] + w2[0] * inv[1][0], w1[0] * inv[0][1] + w2[0] * inv[1][1]],
+             [w1[1] * inv[0][0] + w2[1] * inv[1][0], w1[1] * inv[0][1] + w2[1] * inv[1][1]]];
+  const ez = [0, 0, 10], bz = sub(b(ez), b(o)), wz = sub(w(ez), w(o));
+  const err = Math.hypot(A[0][0] * bz[0] + A[0][1] * bz[1] - wz[0], A[1][0] * bz[0] + A[1][1] * bz[1] - wz[1]);
+  console.log("camera", CAM.azimuth.toFixed(1), CAM.elevation.toFixed(1), "turn det", (A[0][0] * A[1][1] - A[0][1] * A[1][0]).toFixed(4), "check", err.toFixed(6));
+  return A;
+})();
+const turned = (p) => { const q = k.iso(W3(p), { origin: [0, 0], scale: 1, ...CAM }); return [TURN[0][0] * q[0] + TURN[0][1] * q[1], TURN[1][0] * q[0] + TURN[1][1] * q[1]]; };
+const FIT = (() => {
+  const flat = fitPts.map(turned);
+  const xs = flat.map((p) => p[0]), ys = flat.map((p) => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const height = Math.round(((WIDTH - 28) * (y1 - y0)) / (x1 - x0) + 28);
+  const scale = (WIDTH - 28) / (x1 - x0);
+  return { height, scale, shift: [WIDTH / 2 - ((x0 + x1) / 2) * scale, height / 2 - ((y0 + y1) / 2) * scale] };
+})();
+const HEIGHT = FIT.height;
+const P = { origin: [0, 0], scale: FIT.scale, ...CAM };
+const POSE = `matrix(${[TURN[0][0], TURN[1][0], TURN[0][1], TURN[1][1], ...FIT.shift].map((v) => v.toFixed(5)).join(" ")})`;
 console.log("viewBox", WIDTH, HEIGHT, "scale", P.scale.toFixed(3));
 
 // ---- helpers ----
@@ -417,7 +453,7 @@ function neokeyItems() {
   return items.concat(anoItems());
 }
 
-// The ANO swings out with the NeoKey (same frame), as its own object for depth order.
+// The ANO moves with the NeoKey (same frame), as its own object for depth order.
 function anoItems() {
   const items = [];
   const { cx, cy, zf, zb } = ANO;
@@ -474,8 +510,9 @@ const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "The E-ink Audio Player, a palm-sized RP2350 music player. A 61 by 76 mm milled single-sided board carries a Feather RP2350, a TLV320DAC3100 DAC with a headphone jack and an EYESPI breakout on SMT sockets; a flex folds over the top edge to a 2.13 inch e-ink on the back, beside a 2000 mAh LiPo and a NeoKey 1x4, with an ANO rotary encoder for the thumb past the end of the keys. Taken apart, the boards lift off their sockets, the e-ink swings open on its flex, the keys turn face up and the LiPo drops, while each function lights up in turn.",
+    "The E-ink Audio Player, a palm-sized RP2350 music player. A 61 by 76 mm milled single-sided board carries a Feather RP2350, a TLV320DAC3100 DAC with a headphone jack and an EYESPI breakout on SMT sockets; a flex folds over the top edge to a 2.13 inch e-ink on the back, beside a 2000 mAh LiPo and a NeoKey 1x4, with an ANO rotary encoder for the thumb past the end of the keys. It sits as on its stand, seen from behind: the board at 65 degrees, the keys in front at 10 degrees and the ANO past their right end. Taken apart, the boards lift off their sockets, the e-ink swings open on its flex, the LiPo drops, and the keys and the ANO slide out together to the side, while each function lights up in turn.",
   body: [
+    `<g transform="${POSE}">`,
     `<g data-part="k-back"></g>`,
     `<g data-part="display"></g>`,
     `<g data-part="flex-back"></g>`,
@@ -490,6 +527,7 @@ const svg = k.figureSvg({
     `<g data-ride="top">${feather()}</g>`,
     `<g data-ride="top">${tlv()}</g>`,
     `<g data-part="k-front"></g>`,
+    `</g>`,
   ],
 });
 
@@ -528,7 +566,7 @@ ${readFileSync(join(HERE, "poly.mjs"), "utf8").replace(/^import .*$/m, "").repla
 window.__anatomy = { tourMs: ${TOUR_MS} };
 const P = ${JSON.stringify(P)};
 const S = ${S}, LIFT = ${LIFT}, DROP = ${DROP}, STEP_MS = ${STEP_MS};
-const D_HINGE = ${JSON.stringify(D_HINGE)}, K_C0 = ${JSON.stringify(K_C0)}, K_C1 = ${JSON.stringify(K_C1)};
+const D_HINGE = ${JSON.stringify(D_HINGE)}, K_A = ${K_A}, K_T = ${JSON.stringify(K_T)}, K_OUT = ${JSON.stringify(K_OUT)};
 const FLEX = ${JSON.stringify(FLEX)};
 const STEPS = ${JSON.stringify(STEPS)};
 const DISPLAY = ${JSON.stringify(displayItems())};
@@ -581,8 +619,8 @@ function ribbon(pts3, across, tone, g) {
 }
 
 // The swinging parts, rebuilt for an angle.
-function swing(items, hinge, a, off = [0, 0]) {
-  const R = (p) => { const q = rot(p, hinge, a); return [q[0], q[1] + off[0], q[2] + off[1]]; };
+function swing(items, hinge, a, off = [0, 0, 0]) {
+  const R = (p) => { const q = rot(p, hinge, a); return [q[0] + off[0], q[1] + off[1], q[2] + off[2]]; };
   const inner = Wn([0, -Math.sin(a), Math.cos(a)]);
   const innerSeen = dot(inner, cam.V) > 0;
   const list = items.map((it) => {
@@ -664,18 +702,17 @@ function select(i) {
 
 function draw() {
   const lift = LIFT * ease(u / 0.45);
-  const tK = clamp((u - 0.15) / 0.6, 0, 1);
-  const mK = ease(tK / 0.6), aK = Math.PI * ease((tK - 0.25) / 0.75);
+  const mK = ease((u - 0.15) / 0.6);
   const aD = Math.PI * ease((u - 0.25) / 0.6) * dm;
   const drop = DROP * ease((u - 0.6) / 0.4);
   const mv = (list, v) => list.forEach((g) => (v[2] ? g.setAttribute("transform", translateAlong(P, v)) : g.removeAttribute("transform")));
   mv(topG, [0, 0, lift * S]);
   mv(battG, [0, 0, -drop * S]);
-  const key = lift.toFixed(2) + ":" + mK.toFixed(3) + aK.toFixed(3) + ":" + aD.toFixed(3) + ":" + shownStep;
+  const key = lift.toFixed(2) + ":" + mK.toFixed(3) + ":" + aD.toFixed(3) + ":" + shownStep;
   if (key !== shownKey) {
     shownKey = key;
     const kOut = mK > 0.5;
-    const kHtml = swing(NEOKEY, K_C0, -aK, [(K_C1[0] - K_C0[0]) * mK, (K_C1[1] - K_C0[1]) * mK]);
+    const kHtml = swing(NEOKEY, [0, 0], K_A, K_T.map((v, i) => v + K_OUT[i] * mK));
     part("k-back").innerHTML = kOut ? "" : kHtml;
     part("k-front").innerHTML = kOut ? kHtml : "";
     part("display").innerHTML = swing(DISPLAY, D_HINGE, aD);

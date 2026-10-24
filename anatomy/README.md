@@ -1,6 +1,6 @@
 # Anatomy build
 
-The interactive isometric "anatomy" figure of the player, built from `pcb.json` (KiCad board dump) and `solids.json` (STEP solid bounds).
+The interactive isometric "anatomy" figure of the player, built from `pcb.json` (KiCad board dump) and `solids.json` (STEP solid bounds). It is posed as on the stand, from `enclosure/layout.json`: the board at 65 degrees seen from behind, with the keys and the ANO in front.
 
 - Needs the Anatomy kit (`kit/iso-kit.mjs`). Set `ANATOMY_DIR` to the `anatomy-skill` folder; without it, the old local path is used only if it exists.
 - Rebuild the solid list: `freecadcmd anatomy/solids.py` reads `enclosure/inputs/board.step` (run from any folder; it writes `solids.json` to the current folder, so run it in `anatomy/`).

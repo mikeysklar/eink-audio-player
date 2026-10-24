@@ -69,7 +69,7 @@ for u, v in HOLES:
 # Front rail down to the desk: a deep bar under it, cut flat at z = 0 once in world.
 frame = frame.fuse(Part.makeBox(RAIL, 2 * HV - 5.08, 30, App.Vector(-HU, -HV + 2.54, PL_TOP)))
 for u, v in SCREWED:
-    frame = frame.cut(ac.insert_hole((u, v, SO_TOP), (0, 0, 1), extra=1.0))
+    frame = frame.cut(ac.insert_hole((u, v, SO_TOP), (0, 0, 1), extra=1.5))
 frame.transformShape(ano_matrix())
 frame = frame.common(Part.makeBox(200, 200, 100, App.Vector(-20, -150, 0)))
 
