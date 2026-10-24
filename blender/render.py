@@ -39,12 +39,15 @@ FPS = 30
 LAYOUT = json.loads((ARC / "layout.json").read_text())
 N_PLAYER = Vector(LAYOUT["stack"]["normal_to_player"])  # out of the e-ink, toward the player
 UP_KEYS = Vector(LAYOUT["keys"]["normal_up"])  # out of the NeoKey face
+EZ_ANO = Vector((0, math.sin(math.radians(LAYOUT["deck_deg"])),
+                 -math.cos(math.radians(LAYOUT["deck_deg"]))))  # into the ANO mount
+HARDWARE = json.loads((ARC / "build" / "fasteners.json").read_text())
 
 # Printed parts and their colours (arcade/assemble_arcade.py COLORS)
 RED, BLACK = (0.85, 0.20, 0.30), (0.10, 0.10, 0.12)
-PRINTED = {"bezel": BLACK, "deck": BLACK, "cheek_L": RED, "cheek_R": RED,
-           "brace_front": BLACK, "brace_rear": BLACK, "brace_top": RED, "battery_strap": BLACK,
-           "ano_mount": BLACK}
+PRINTED = {"chassis": RED, "bezel": BLACK, "deck": BLACK, "cradle": BLACK, "handle": RED}
+# Pivots that ride on another while it moves (each pivot only ever translates)
+PARENT = {"cradle": "bezel", "stack": "bezel", "keys": "deck", "keycaps": "deck"}
 
 # Board parts (export.sh references) -> explode group; all ride on "stack" except the NeoKey
 STACK_GROUPS = {
@@ -58,26 +61,28 @@ STACK_GROUPS = {
 HEADERS = ["J1", "J2", "J9", "J10"]
 SOCKET_TOP, BREAKOUT_BOTTOM = 9.0, 11.49
 
-# Explode: group -> (world offset mm, (out start, out end) s, (back start, back end) s)
+# Explode: the real assembly run backwards, then forwards. The screws back out, the handle
+# pulls out to the left, the ANO lifts off, the deck comes out (the NeoKey drops off its
+# pins, the MX switches stay in the plate), the bezel comes out with the stack, and the
+# stack comes apart behind it. Coming back is the mirror image. The offsets are spread
+# wider than the real paths so every part shows; assemble_arcade.py checks the real ones.
+# group -> (offset mm from its parent, (out start, out end) s); back = mirrored about MIRROR
 EXPLODE_SECONDS = 8.0
+MIRROR = 4.0
 MOVES = {
-    "cheek_L": (Vector((-48, 0, 0)), (1.0, 2.2), (6.0, 7.2)),
-    "cheek_R": (Vector((48, 0, 0)), (1.0, 2.2), (6.0, 7.2)),
-    "brace_top": (Vector((0, 18, 52)), (1.1, 2.3), (5.9, 7.1)),
-    "brace_front": (Vector((0, -26, 0)), (1.2, 2.4), (5.8, 7.0)),
-    "brace_rear": (Vector((0, 26, 0)), (1.2, 2.4), (5.8, 7.0)),
-    "bezel": (N_PLAYER * 56 + Vector((0, 4, 34)), (1.2, 2.6), (5.8, 7.0)),
-    "battery_strap": (N_PLAYER * 26 + Vector((0, 0, -4)), (1.4, 2.6), (5.6, 6.8)),
-    "ano_mount": (Vector((14, -30, -12)), (1.3, 2.5), (5.7, 6.9)),  # under the ANO (keys)
-    "stack": (Vector((0, 4, 34)), (1.6, 3.0), (5.2, 6.6)),
-    "display": (N_PLAYER * 30, (2.2, 3.4), (5.0, 6.2)),
-    "battery": (N_PLAYER * 14, (2.3, 3.4), (5.0, 6.1)),
-    "breakouts": (N_PLAYER * -22, (2.3, 3.5), (5.0, 6.2)),
-    "sockets": (N_PLAYER * -6, (2.4, 3.5), (5.0, 6.1)),
-    "keys": (UP_KEYS * 16 + Vector((0, -30, 0)), (1.5, 2.7), (5.4, 6.6)),
-    "keycaps": (UP_KEYS * 16, (2.2, 3.3), (5.0, 6.0)),
+    "handle": (Vector((-80, 0, 0)), (0.7, 1.5)),
+    "ano": (-EZ_ANO * 28 + Vector((14, 0, 0)), (0.9, 1.7)),
+    "deck": (Vector((0, -78, 12)), (1.1, 2.0)),  # up off its slots, then out the front
+    "keys": (-UP_KEYS * 14, (1.9, 2.6)),
+    "bezel": (N_PLAYER * 50 + Vector((0, 0, 62)), (1.6, 2.5)),
+    "cradle": (N_PLAYER * -14, (2.4, 3.2)),
+    "board": (N_PLAYER * -30, (2.4, 3.2)),
+    "sockets": (N_PLAYER * -38, (2.4, 3.2)),
+    "breakouts": (N_PLAYER * -58, (2.4, 3.2)),
+    "battery": (N_PLAYER * -22, (2.5, 3.2)),
 }
-EXPLODED_AT = 4.2  # s, fully apart
+SCREWS_OUT = (0.3, 0.8)  # every screw backs out along its axis, then rides its part
+EXPLODED_AT = 4.0  # s, fully apart
 
 TURN_SECONDS = 10.0
 TURN_START_DEG = -35  # azimuth 0 looks from the player (-Y); negative = from the left
@@ -226,7 +231,7 @@ def build(mats):
     pivots = {}
 
     for name, color in PRINTED.items():
-        pivot = pivots[name] = empty(f"Explode {name}")
+        pivot = pivots[name] = empty(f"Explode {name}", pivots.get(PARENT.get(name)))
         bpy.ops.wm.stl_import(filepath=str(ARC / "build" / f"{name}.stl"), global_scale=MM)
         obj = bpy.context.object
         obj.name = name
@@ -234,7 +239,7 @@ def build(mats):
         smooth([obj])
         obj.parent = pivot
 
-    stack = pivots["stack"] = empty("Explode stack")
+    stack = pivots["stack"] = empty("Explode stack", pivots[PARENT["stack"]])
     done = set()
     glb = {}
     for group, refs in STACK_GROUPS.items():
@@ -250,17 +255,20 @@ def build(mats):
     for ref in HEADERS:
         header_strip(glb[ref], breakout_frame, mats)
 
-    keys = pivots["keys"] = empty("Explode keys")
+    keys = pivots["keys"] = empty("Explode keys", pivots[PARENT["keys"]])
     frame = empty("Board frame keys", keys)
     frame.matrix_world = body_matrix("keys")
     glb["A5"] = import_glb("A5", frame)
     fix_materials(glb["A5"], done)
-    glb["ANO1"] = import_glb("ANO1", frame)  # the ANO on ano_mount rides with the keys
+    ano = pivots["ano"] = empty("Explode ano")  # on the chassis's ANO mount
+    ano_frame = empty("Board frame ano", ano)
+    ano_frame.matrix_world = body_matrix("keys")
+    glb["ANO1"] = import_glb("ANO1", ano_frame)
     fix_materials(glb["ANO1"], done)
     bpy.context.view_layer.update()
     # The four MX switch + keycap blocks (Cherry MX keycap.wrl) lift further off the NeoKey:
     # the only A5 meshes reaching more than 3 mm out past its face (board z -12.03).
-    caps = pivots["keycaps"] = empty("Explode keycaps", keys)
+    caps = pivots["keycaps"] = empty("Explode keycaps", pivots[PARENT["keycaps"]])
     inv = frame.matrix_world.inverted()
     blocks = [obj for obj in glb["A5"]
               if min((inv @ obj.matrix_world @ Vector(c)).z for c in obj.bound_box) < -15.0 * MM]
@@ -279,11 +287,41 @@ def build(mats):
     recolor(glb["DS1"], (0.56, 0.66, 0.56), mats["eink"])  # KiCad's grey-green -> paper
     recolor(glb["A5"], (0.79, 0.79, 0.75), mats["keycap"])
     recolor(glb["BT1"], None, mats["pouch"])
+    add_hardware(pivots, mats)
     return pivots
 
 
+def add_hardware(pivots, mats):
+    """fasteners.json: each screw on its own pivot (it backs out along its axis), riding the
+    part its head bears on; each insert rides the part it is pressed into."""
+    meshes = {}
+    rides = {"chassis": pivots["chassis"], "bezel": pivots["bezel"], "deck": pivots["deck"],
+             "board": pivots["board"], "keys": pivots["keys"], "ano": pivots["ano"]}
+    for i, item in enumerate(HARDWARE):
+        kind = item["kind"]
+        if kind not in meshes:
+            bpy.ops.wm.stl_import(filepath=str(ARC / "build" / f"hw_{kind}.stl"), global_scale=MM)
+            proto = bpy.context.object
+            bpy.ops.object.transform_apply(scale=True)  # the importer scales the object
+            proto.data.materials.append(mats["brass" if kind == "insert" else "steel"])
+            smooth([proto])
+            meshes[kind] = proto.data
+            bpy.data.objects.remove(proto, do_unlink=True)
+        axis = Vector(item["axis"])
+        pivot = empty(f"Hardware {i} {kind}", rides[item["rides"]])
+        obj = bpy.data.objects.new(f"{kind} {i}", meshes[kind])
+        bpy.context.scene.collection.objects.link(obj)
+        obj.parent = pivot
+        obj.matrix_world = Matrix.Translation(Vector(item["p"]) * MM) @ \
+            Vector((0, 0, -1)).rotation_difference(axis).to_matrix().to_4x4()
+        if kind != "insert":
+            pivots[f"screw {i}"] = pivot
+            MOVES[f"screw {i}"] = (-axis * (item["length"] + 3), SCREWS_OUT)
+
+
 def key_explode(pivots):
-    for name, (offset, out, back) in MOVES.items():
+    for name, (offset, out) in MOVES.items():
+        back = (2 * MIRROR - out[1], 2 * MIRROR - out[0])
         obj = pivots[name]
         for seconds, f in ((0, 0), (out[0], 0), (out[1], 1), (back[0], 1), (back[1], 0),
                            (EXPLODE_SECONDS, 0)):
@@ -396,6 +434,8 @@ def main():
         "pouch": material("LiPo pouch", (0.70, 0.71, 0.73), roughness=0.35, metallic=0.7),
         "enig": material("ENIG", (0.93, 0.78, 0.45), roughness=0.25, metallic=1.0),
         "mask": material("Black mask", (0.03, 0.03, 0.035), roughness=0.45, coat=0.3),
+        "steel": material("Stainless", (0.62, 0.62, 0.64), roughness=0.28, metallic=1.0),
+        "brass": material("Brass insert", (0.80, 0.62, 0.32), roughness=0.3, metallic=1.0),
     }
     pivots = build(mats)
     add_floor(mats)
@@ -440,7 +480,7 @@ def main():
         # Dolly out while the parts are apart, back in as they close up
         bpy.context.preferences.edit.keyframe_new_interpolation_type = "BEZIER"
         e = math.radians(20)
-        for seconds, apart in ((0, 0), (1.0, 0), (2.8, 1), (5.4, 1), (7.2, 0), (EXPLODE_SECONDS, 0)):
+        for seconds, apart in ((0, 0), (0.3, 0), (3.0, 1), (5.0, 1), (7.7, 0), (EXPLODE_SECONDS, 0)):
             distance = 0.44 + (0.62 - 0.44) * apart
             cam.location = (0, -distance * math.cos(e), distance * math.sin(e))
             cam.keyframe_insert("location", frame=1 + round(seconds * FPS))

@@ -1,8 +1,8 @@
 # Printing the eink-audio-player stand
 
-Nine STL files make the stand, one printed piece each. Each file
-is one watertight solid (checked in FreeCAD: no non-manifold edges). The sizes below are
-for each part in the orientation it should print in.
+Five STL files make the stand, one printed piece each. Each file is one watertight solid
+(checked in FreeCAD). The sizes below are for each part in the orientation it should
+print in.
 
 ## Settings
 
@@ -10,50 +10,37 @@ for each part in the orientation it should print in.
 - Walls: 4 perimeters (1.6 mm). This matches the design's minimum wall. Three walls
   (1.2 mm) is thinner than the design allows.
 - Infill: 20%. The parts are thin bars, so most of the strength comes from the walls.
-- Material: PLA works. PETG is tougher for the joint bosses and the screw pilots.
-- Bed: all nine pieces fit a 180 x 180 mm bed. The largest is a cheek at 91 x 101.8 mm.
-- Brim: the deck touches the bed on a small patch (about 1.2 cm2). Add a 5 mm brim.
-- Supports: the bezel and deck have some overhang. The brace_top rod needs supports under
-  its lower half when it lies down (see its row).
+- Material: PLA works. PETG is tougher for the handle's snap.
+- Bed: all five pieces fit a 180 x 180 mm bed. The largest is the chassis at
+  128 x 141 mm.
+- Supports: tree supports for the chassis (see its row). The others need little or none.
 
 ## Parts
 
 | part | qty | size in print orientation (mm) | volume (cm3) | PLA grams (max) | orientation | notes |
 |---|---|---|---|---|---|---|
-| [bezel](../enclosure/stl/bezel.stl) | 1 | 79.0 x 82.0 x 18.4 | 15.67 | 19.4 | front face down | about 390 mm2 of overhang under the chin and bosses. Supports optional. |
-| [deck](../enclosure/stl/deck.stl) | 1 | 79.0 x 7.2 x 28.8 | 3.06 | 3.8 | standing on back edge | 14.1 mm key holes bridge across the plate. About 410 mm2 of overhang. Use a brim. |
-| [cheek_L](../enclosure/stl/cheek_L.stl) | 1 | 91.0 x 101.8 x 4.0 | 8.46 | 10.5 | outer face down | 2.8 mm clear holes and 4.8 mm counterbores open on the bed face. |
-| [cheek_R](../enclosure/stl/cheek_R.stl) | 1 | 91.0 x 101.8 x 4.0 | 8.46 | 10.5 | outer face down | mirror of cheek_L. |
-| [brace_front](../enclosure/stl/brace_front.stl) | 1 | 79.0 x 6.0 x 10.0 | 4.69 | 5.8 | flat on the desk face | print as built. Almost no overhang. |
-| [brace_rear](../enclosure/stl/brace_rear.stl) | 1 | 79.0 x 6.0 x 10.0 | 4.69 | 5.8 | flat on the desk face | same as brace_front. |
-| [brace_top](../enclosure/stl/brace_top.stl) | 1 | 79.0 x 7.0 x 7.0 | 2.99 | 3.7 | lying down | about 380 mm2 of overhang under the lower half. Use supports, or print it upright. |
-| [battery_strap](../enclosure/stl/battery_strap.stl) | 1 | 79.0 x 22.5 x 9.0 | 1.67 | 2.1 | stile face down | no overhang. |
-| [ano_mount](../enclosure/stl/ano_mount.stl) | 1 | 40.6 x 70.6 x 22.1 | 3.41 | 4.2 | as it sits, rail on the bed | the frame is tilted 10 degrees and the arm overhangs it. Use supports under both. |
+| [chassis](../enclosure/stl/chassis.stl) | 1 | 128.1 x 140.5 x 91.0 | 30.38 | 37.7 | upright, on its feet | both cheeks, the foot bars and the ANO mount in one piece. Tree supports under the roof, waist and deck rails and the tilted ANO frame. |
+| [bezel](../enclosure/stl/bezel.stl) | 1 | 80.9 x 82.0 x 18.4 | 15.72 | 19.5 | front face down | some overhang under the chin and bosses. Supports optional. |
+| [deck](../enclosure/stl/deck.stl) | 1 | 80.9 x 8.7 x 28.8 | 3.15 | 3.9 | standing on its back edge | 14.1 mm key holes bridge across the plate. Use a 5 mm brim. |
+| [cradle](../enclosure/stl/cradle.stl) | 1 | 61.9 x 70.1 x 9.5 | 3.88 | 4.8 | display face down | the side rails bridge about 15 mm over two parts on the display's back. |
+| [handle](../enclosure/stl/handle.stl) | 1 | 90.0 x 11.0 x 8.4 | 3.19 | 4.0 | lying on its flat | a small support under the snap pin, which stands 1 mm off the bed. |
 
 Grams are an upper bound: 100% solid PLA at 1.24 g/cm3. A printed part with walls and
-20% infill uses less. Total for all nine pieces: 53.1 cm3, at most 65.9 g.
+20% infill uses less. Total for all five pieces: 56.3 cm3, at most 69.8 g.
+
+## Heat inserts
+
+Twelve M2.5 brass heat inserts, 3.3 mm across and 3.3 mm long, go in once with a
+soldering iron, at the temperature your inserts call for. The holes are 3.1 mm across
+and 3.8 mm deep:
+
+- bezel: 4 on the back face (the display screws) and 1 in each top boss end
+- deck: 1 in each front boss end, and 2 in the standoffs on one diagonal
+- chassis: 2 in the ANO standoffs on one diagonal
+
+Press each one square and flush. A crooked insert makes the screw bind.
 
 ## Assembly
 
-Use M2.5 screws throughout. The pilots are 2.2 mm, sized for self-tapping M2.5 screws.
-
-1. Deck and NeoKey. Set the NeoKey on the four deck standoffs and screw it down.
-2. Bezel and display. Put the display on the bezel. Run the four longer M2.5 display
-   screws through the bezel bosses, the display, the board and into the brass standoffs.
-3. Battery strap. Set the LiPo under the strap. Drive one M2.5 screw from behind into
-   each bezel stile.
-4. Cheeks and joints. Fit the two cheeks to the bezel and deck bosses. Screw through the
-   2.8 mm holes on the outer face into the boss pilots. On the right, the ANO mount's arm
-   goes over the two deck joints first, and those two take M2.5 x 12 mm screws.
-5. Braces. Fit brace_front and brace_rear to the feet, and brace_top to the top rear
-   joints.
-6. STEMMA QT cable. Route the cable from the Feather to the NeoKey QT connector before
-   the last screws go in.
-7. Joint screws. Put in all 14 joint screws: four on the bezel, four on the deck, four
-   on the feet and two at the top rear.
-8. ANO. Screw the ANO to the mount's four standoffs, wheel up, and run the 100 mm STEMMA
-   QT cable from its back port through the right cheek's window to the NeoKey.
-
-Total M2.5 count: 4 display screws, 4 board to standoff screws, 2 battery strap screws,
-4 NeoKey screws, 14 joint screws (two of them 12 mm) and 4 ANO screws, 32 in all. See
-[HARDWARE.md](HARDWARE.md) for lengths.
+See [HARDWARE.md](HARDWARE.md) for the order and the screw lengths: 12 M2.5 socket head
+screws in all, four each of 6, 8 and 16 mm.

@@ -105,84 +105,56 @@ Feather pins 1, 3 to 10 are open (VBAT, VBUS, D13, D12, D11, D10, D9, D6, D5).
 ## Stand hardware
 
 The stand is a mini arcade: the screen tilts back, and the keys sit on their own deck in
-front. The parts are joined by M2.5 screws.
+front. It is five printed parts held by 12 M2.5 socket head screws, each into a brass heat
+insert (3.3 mm across, 3.3 mm long). The inserts go in once, with a soldering iron, so
+the stand comes apart and goes back together as often as you like. Each insert hole is
+3.1 mm across and 3.8 mm deep, with a 2.2 mm hole past it for the screw tip. The walls
+round each insert are 1.1 mm or more.
 
-### Joints (cheeks)
+### What holds what
 
-There are 14 joints, one M2.5 per joint, from the outside of each 4 mm cheek into a
-6 mm pilot in the owning part. Each cheek has a 2.8 mm clear hole and a 4.8 mm
-counterbore, 1.5 mm deep, on the outside. Each joint has 2.5 mm of cheek left after the
-counterbore, then the 6 mm pilot.
-
-| Joint | Count | Screw |
+| Joint | Fixing | Screws |
 |---|---|---|
-| bezel top, bezel bottom (left and right) | 4 | M2.5 x 10 mm |
-| deck back, deck front (left) | 2 | M2.5 x 10 mm |
-| deck back, deck front (right, through the ANO mount arm) | 2 | M2.5 x 12 mm |
-| foot front, foot rear (left and right) | 4 | M2.5 x 10 mm |
-| top rear (left and right) | 2 | M2.5 x 10 mm |
+| Stack to bezel | M2.5 x 16 from the board side, through H1 to H4, the cradle posts and the display, into inserts in the bezel's back | 4 |
+| Bezel to chassis | pegs on the bottom bosses in the cheek slots, one M2.5 x 8 per side at the top bosses | 2 |
+| Deck to chassis | pegs on the back bosses in the cheek slots (the bezel chin keeps them down), one M2.5 x 8 per side at the front bosses | 2 |
+| NeoKey to deck | two M2.5 x 6 from the NeoKey's back into inserts in two standoffs, two printed pins in the other holes | 2 |
+| ANO to chassis | two M2.5 x 6 from the ANO's top into inserts in two standoffs, two printed pins in the other holes | 2 |
+| Handle | pushes through the left cheek and snaps into the right one | 0 |
+| Battery | held by the cradle's bars and tabs, which the stack screws clamp | 0 |
 
-The 10 mm length puts about 7.5 mm of thread into the 6 mm pilot. It leaves a tip
-about 1.5 mm past the pilot bottom. Keep the head height at or below 1.5 mm so it sits in
-the counterbore.
+The cheek screws sit in a 4.8 mm counterbore, 1.5 mm deep, then pass 2.5 mm of cheek and
+a 0.25 mm gap into the insert. The right front deck screw is reached through an open
+bore in the ANO mount's arm.
 
-### Display (through the bezel into brass standoffs)
+The stack screws run 1.6 mm of board, 9.5 mm of cradle post and 1.6 mm of display, then
+3.3 mm into the insert. The four holes sit on the board corners at x 2.6 and 58.5 mm,
+y 39.3 and 73.6 mm (H1 to H4), away from the battery.
 
-| Part | Count | Length |
-|---|---|---|
-| M2.5 screw, bezel to display to standoff | 4 | 8 mm |
-| M2.5 screw, landing pad through H1 to H4 into standoff bottom | 4 | 6 mm |
-| Brass standoff, M2.5, between display PCB and board | 4 | 9.5 mm |
+### Assembly order
 
-Measured stack, from the front of the bezel: head seat 2.0 mm deep in the bezel
-counterbore, bezel 2.2 mm to the back, 0.05 mm gap, display PCB 1.57 mm, then the
-standoff. The screw has about 3.8 mm to the standoff top, which leaves about 4 mm of
-thread in the standoff with an 8 mm screw. The standoff spans the 9.5 mm from the display
-PCB back to the board's bottom face. The four holes sit on the board corners at
-x 2.6 and 58.5 mm, y 39.3 and 73.6 mm (H1 to H4), away from the battery.
+1. Press the 12 inserts: 6 in the bezel (4 on the back, 1 in each top boss), 4 in the
+   deck (1 in each front boss, 2 in standoffs) and 2 in the chassis's ANO standoffs.
+2. Stack: the cradle on the display's back, the board on the cradle, then four M2.5 x 16
+   from the board side into the bezel.
+3. Slide the bezel and stack into the chassis from the front, pegs into the low slots,
+   and fit the two M2.5 x 8 at the top.
+4. Fit the NeoKey (with its switches and keycaps through the deck) on the deck's pins with
+   two M2.5 x 6. Lower the deck in from above, pegs into the slots under the bezel chin,
+   and fit the two M2.5 x 8 at the front.
+5. The ANO on its pins with two M2.5 x 6, and the STEMMA QT cable from the NeoKey.
+6. Push the handle through the left cheek until it snaps.
 
-The board is fixed to the standoff bottoms by 4 more M2.5 x 6 mm screws, from the landing
-pad side through H1 to H4 into the standoffs.
-
-### Battery straps
-
-| Part | Count | Screw |
-|---|---|---|
-| Battery strap end plate, to bezel stile | 2 | M2.5 x 6 mm |
-
-The strap plate is 1.7 mm thick. The pilot in the stile is 5 mm of stile from its back
-face. A 6 mm screw gives about 4 mm of thread in the stile, and its tip stays inside the
-stile.
-
-### ANO mount
-
-| Part | Count | Screw |
-|---|---|---|
-| M2.5 screw, ANO board into the mount's standoffs | 4 | 6 mm |
-
-The mount's arm sits on the outside of the right cheek and takes the two right deck
-joints: 2.0 mm counterbore in the 4 mm arm, the 4 mm cheek, then the 6 mm pilot in the
-deck boss, so those two are 12 mm. The ANO's 1.6 mm board sits on four printed standoffs
-with 5.5 mm pilots, so a 6 mm screw gives about 4.4 mm of thread.
-
-### Keys (NeoKey into deck standoffs)
-
-| Part | Count | Screw |
-|---|---|---|
-| M2.5 screw, deck plate to standoff to NeoKey | 4 | 6 mm |
-
-The stack is the 1.6 mm NeoKey PCB, the 3.5 mm standoff (4.4 mm of it used by the screw)
-and the 1.5 mm deck plate. The pilot runs through to the plate top, so a 6 mm screw seats
-fully. The standoffs are printed on the deck, so they need no hardware.
+To take it apart, run the list backwards.
 
 ## Screw total
 
-| Length | Count | Used for |
+| Item | Count | Used for |
 |---|---|---|
-| M2.5 x 6 mm | 14 | 2 battery strap, 4 NeoKey, 4 board to standoff, 4 ANO |
-| M2.5 x 8 mm | 4 | display, bezel to standoff |
-| M2.5 x 10 mm | 12 | cheek joints |
-| M2.5 x 12 mm | 2 | right deck joints, through the ANO mount arm |
-| **Total** | **32** | |
+| M2.5 x 6 mm socket head | 4 | NeoKey, ANO |
+| M2.5 x 8 mm socket head | 4 | bezel and deck to the chassis |
+| M2.5 x 16 mm socket head | 4 | stack to bezel |
+| M2.5 heat insert, 3.3 x 3.3 mm | 12 | one per screw |
+| **Screws** | **12** | |
 
-Also needed: 4 brass M2.5 standoffs, 9.5 mm (display).
+No standoffs, nuts or self-tapping screws are needed.

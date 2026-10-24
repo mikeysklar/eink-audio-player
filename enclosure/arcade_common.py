@@ -29,6 +29,24 @@ HERE = os.environ.get("EAP_ROOT") or os.path.dirname(os.path.abspath(__file__))
 BUILD = os.path.join(HERE, "build")
 STEP = os.path.join(HERE, "inputs", "board.step")
 
+# Fixings (the heat-insert stand). M2.5 brass heat inserts, 3.3 OD x 3.3 long, go into
+# INSERT_D x INSERT_DEPTH holes with a PILOT_D hole past them for the screw tip. Parts
+# that sit between the cheeks stop END_GAP short of each inner face; a STUB_D x STUB_LEN
+# peg on a boss end drops into a SLOT_W x SLOT_DEPTH slot on the cheek's inner face.
+INSERT_D, INSERT_DEPTH, INSERT_OD, INSERT_LEN = 3.1, 3.8, 3.3, 3.3
+PILOT_D = 2.2
+END_GAP = 0.25
+STUB_D, STUB_LEN = 4.0, 1.2
+SLOT_W, SLOT_DEPTH = 4.4, 1.5
+
+
+def insert_hole(p, axis, extra=2.5):
+    """Heat-insert hole from point p (on the face) along axis, with a pilot past it."""
+    a = App.Vector(*axis).normalize()
+    p = App.Vector(*p)
+    h = Part.makeCylinder(INSERT_D / 2, INSERT_DEPTH + 0.5, p - a * 0.5, a)
+    return h.fuse(Part.makeCylinder(PILOT_D / 2, INSERT_DEPTH + extra, p, a))
+
 
 def layout():
     return json.load(open(os.path.join(HERE, "layout.json")))

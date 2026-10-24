@@ -2,14 +2,13 @@
 # SPDX-License-Identifier: MIT-0
 # ANO mount: holds the Adafruit ANO rotary encoder (6310, model from Adafruit_CAD_Parts
 # "5740 ANO Rotary Encoder QT") past the right end of the keys and toward the player, for
-# the thumb, tilted DECK_DEG like the keys. An arm on the right cheek's outer face takes
-# the deck_back_R and deck_front_R screws (M2.5 x 12 now, through arm and cheek into the
-# deck bosses), a frame under the ANO carries four standoffs it screws down into, and the
-# frame's front rail runs down to the desk so a thumb press does not lever the stand.
+# the thumb, tilted DECK_DEG like the keys. It is fused into the chassis (chassis.py): an
+# arm on the right cheek's outer face, with an open bore over the deck_front_R screw head,
+# a frame under the ANO with four standoffs (two take heat inserts for M2.5 x 6 screws
+# from the ANO's top, two have pins through its holes), and the frame's front rail runs
+# down to the desk so a thumb press does not lever the stand.
 # The ANO's STEMMA QT on its back edge faces the stand: the cable runs from the NeoKey's
 # right port, through the cheek window, to it.
-# Print it as it sits, the rail's flat bottom on the bed, with supports under the 10 degree
-# frame and the arm.
 import os, sys; sys.path.insert(0, os.environ.get("EAP_ROOT") or os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import math
 import os
@@ -21,9 +20,8 @@ L = ac.layout()
 ANO_STEP = os.path.join(ac.HERE, "..", "kicad", "3d", "5740 ANO Rotary Encoder QT.step")
 X_OUT = L["x_in"] + L["cheek_t"]                    # right cheek outer face, 43.5
 T = 4.0                                              # arm thickness, x 43.5..47.5
-CLEAR_R, CB_R, CB_D = L["screw"]["clear_d"] / 2, 4.8 / 2, 2.0
-NODE_R, BAR = CLEAR_R + 3.5, 5.0                    # as cheeks.py
-PILOT_D, PILOT_DEPTH = L["screw"]["pilot_d"], 5.5
+HEAD_BORE = 5.4                                     # socket head 4.5 + room for a hex key
+NODE_R, BAR = L["screw"]["clear_d"] / 2 + 3.5, 5.0   # as the cheeks
 
 # ANO frame (its STEP: board z 0..1.57, wheel on -z, holes at (+-15.24, +-17.78)).
 # u (STEP x) runs up the slope toward the stand, v (STEP y) to the player's right, w (STEP
@@ -63,12 +61,15 @@ def rounded(hu, hv, r, w0, w1):
 # Frame and standoffs, ANO frame.
 frame = rounded(HU, HV, 2.54, PL_TOP, PL_BOT).cut(
     Part.makeBox(2 * (HU - RAIL), 2 * (HV - RAIL), 10, App.Vector(-(HU - RAIL), -(HV - RAIL), 0)))
+SCREWED = [HOLES[0], HOLES[-1]]                     # a diagonal pair
 for u, v in HOLES:
-    frame = frame.fuse(Part.makeCylinder(2.5, PL_TOP - SO_TOP + 0.01, App.Vector(u, v, SO_TOP)))
+    frame = frame.fuse(Part.makeCylinder(3.0, PL_TOP - SO_TOP + 0.01, App.Vector(u, v, SO_TOP)))
+    if (u, v) not in SCREWED:                       # pin into the ANO's 2.5 hole
+        frame = frame.fuse(Part.makeCylinder(1.1, 1.41, App.Vector(u, v, SO_TOP - 1.4)))
 # Front rail down to the desk: a deep bar under it, cut flat at z = 0 once in world.
 frame = frame.fuse(Part.makeBox(RAIL, 2 * HV - 5.08, 30, App.Vector(-HU, -HV + 2.54, PL_TOP)))
-for u, v in HOLES:
-    frame = frame.cut(Part.makeCylinder(PILOT_D / 2, PILOT_DEPTH, App.Vector(u, v, SO_TOP - 0.5)))
+for u, v in SCREWED:
+    frame = frame.cut(ac.insert_hole((u, v, SO_TOP), (0, 0, 1), extra=1.0))
 frame.transformShape(ano_matrix())
 frame = frame.common(Part.makeBox(200, 200, 100, App.Vector(-20, -150, 0)))
 
@@ -96,11 +97,9 @@ arm = disc(jb[1], jb[2], NODE_R).fuse([
     strut((jb[1], jb[2]), (jf[1], jf[2]), BAR),
     strut((jf[1], jf[2]), (rear.y, rear.z), BAR),
 ])
-for j in (jb, jf):
-    arm = arm.cut(Part.makeCylinder(CLEAR_R, T + 2, App.Vector(X_OUT - 1, j[1], j[2]),
-                                    App.Vector(1, 0, 0)))
-    arm = arm.cut(Part.makeCylinder(CB_R, CB_D + 1, App.Vector(X_OUT + T - CB_D, j[1], j[2]),
-                                    App.Vector(1, 0, 0)))
+# The deck_front_R screw head sits in the cheek's counterbore; the arm leaves it open.
+arm = arm.cut(Part.makeCylinder(HEAD_BORE / 2, T + 2, App.Vector(X_OUT - 1, jf[1], jf[2]),
+                                App.Vector(1, 0, 0)))
 
 shape = frame.fuse(arm).removeSplitter()
 shape = ac.save(shape, "ano_mount")

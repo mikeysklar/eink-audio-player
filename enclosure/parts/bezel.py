@@ -1,10 +1,12 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
 # SPDX-License-Identifier: MIT-0
 # Screen bezel: a frame over the e-ink, two stiles down the sides to the cheeks, and a
-# chin under the board's bottom edge that the tilted stack rests on. The four display
-# screws go through it (longer M2.5s into the brass standoffs), so it carries the stack.
-# Built flat in the board frame (front face at z=FRONT, the player side) and moved to
-# world. Print front face down.
+# chin under the board's bottom edge that the tilted stack rests on. The stack hangs off
+# it: four M2.5 x 16 from the board side, through the board, the cradle and the display,
+# into heat inserts in its back. It slides into the chassis from the front, its bottom
+# bosses' pegs dropping into the cheek slots, and one M2.5 x 8 per side at the top bosses
+# holds it. Built flat in the board frame (front face at z=FRONT, the player side) and
+# moved to world. Print front face down.
 import os, sys; sys.path.insert(0, os.environ.get("EAP_ROOT") or os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import json
 import os
@@ -14,7 +16,8 @@ import arcade_common as ac
 
 L = ac.layout()
 D = json.load(open(os.path.join(ac.HERE, "inputs", "measure_display.json")))
-BX_L, BX_R = 30.53 + L["x_in"], 30.53 - L["x_in"]   # board x at world x = -39.5 / +39.5
+XE = L["x_in"] - ac.END_GAP                         # ends 0.25 off the cheeks
+BX_L, BX_R = 30.53 + XE, 30.53 - XE                # board x at world x = -39.25 / +39.25
 JY_TOP, JY_BOT, JZ = 73.57, 5.0, -12.35              # layout.py bezel joints
 BOSS_R, BOSS_LEN = 3.0, 8.0
 PILOT_D, PILOT_DEPTH = 2.2, 6.0
@@ -65,29 +68,29 @@ m.A34 = FRONT + CH
 w.transformShape(m)
 shape = shape.cut(w)
 
-# Display screws: 2.8 through, 4.8 x 2.0 counterbore from the front.
+# Display: heat inserts from the back face, blind, so the front stays clean.
 for hx, hy in D["pcb"]["holes"]:
-    shape = shape.cut(Part.makeCylinder(1.4, 10, App.Vector(hx, hy, FRONT - 1)))
-    shape = shape.cut(Part.makeCylinder(2.4, 3.0, App.Vector(hx, hy, FRONT - 1)))
+    shape = shape.cut(ac.insert_hole((hx, hy, BACK), (0, 0, -1), extra=0.4))
 
-# Pilots for the battery strap screws, from the stiles' back faces (battery_strap.py).
-for x in (BX_R + 3.0, BX_L - 3.0):
-    shape = shape.cut(Part.makeCylinder(PILOT_D / 2, PILOT_DEPTH, App.Vector(x, 17.75,
-                                        JZ + BOSS_R - PILOT_DEPTH + 1)))
-
-# Pilots in the boss ends.
-for y in (JY_TOP, JY_BOT):
-    shape = shape.cut(Part.makeCylinder(PILOT_D / 2, PILOT_DEPTH + 1,
-                                        App.Vector(BX_R - 1, y, JZ), X_AXIS))
-    shape = shape.cut(Part.makeCylinder(PILOT_D / 2, PILOT_DEPTH + 1,
-                                        App.Vector(BX_L - PILOT_DEPTH, y, JZ), X_AXIS))
+# Top bosses: heat inserts in the ends. Bottom bosses: pegs for the cheek slots.
+shape = shape.cut(ac.insert_hole((BX_R, JY_TOP, JZ), (1, 0, 0)))
+shape = shape.cut(ac.insert_hole((BX_L, JY_TOP, JZ), (-1, 0, 0)))
+shape = shape.fuse(Part.makeCylinder(ac.STUB_D / 2, ac.STUB_LEN + 0.01,
+                                     App.Vector(BX_R - ac.STUB_LEN, JY_BOT, JZ), X_AXIS))
+shape = shape.fuse(Part.makeCylinder(ac.STUB_D / 2, ac.STUB_LEN + 0.01,
+                                     App.Vector(BX_L - 0.01, JY_BOT, JZ), X_AXIS))
 
 shape.transformShape(ac._matrix("stack"))
-# The deck's back bosses tuck under the chin: clear them by GAP (world frame).
+# The deck's back bosses tuck under the chin, and the deck drops in from straight above:
+# clear the bosses, and the path above them, by GAP (world frame).
 for side, sx in (("L", -1), ("R", 1)):
     jx, jy, jz = L["joints"]["deck_back_" + side]
-    shape = shape.cut(Part.makeCylinder(BOSS_R + GAP, BOSS_LEN + GAP + 1,
-                                        App.Vector(jx + sx, jy, jz), App.Vector(-sx, 0, 0)))
+    r, n = BOSS_R + GAP, BOSS_LEN + GAP + 1
+    o = App.Vector(jx + sx, jy, jz)
+    path = Part.makeCylinder(r, n, o, App.Vector(-sx, 0, 0)).fuse([
+        Part.makeCylinder(r, n, o + App.Vector(0, 0, 40), App.Vector(-sx, 0, 0)),
+        Part.makeBox(n, 2 * r, 40, App.Vector(min(o.x, o.x - sx * n), jy - r, jz))])
+    shape = shape.cut(path)
 shape = shape.removeSplitter()
 shape = ac.save(shape, "bezel")
 ac.clash(shape)

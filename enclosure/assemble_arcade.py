@@ -5,10 +5,13 @@
     /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd assemble_arcade.py
 
 Reads every part STEP in build/ (written by parts/*.py), checks each one against the
-placed board models and against every other part, then writes build/arcade.FCStd (parts,
-stack and keys as separate coloured objects, for looking at) and build/arcade.step.
+placed board models and against every other part, checks the hardware (fasteners.py)
+against everything, sweeps each part along the way it goes in, then writes
+build/arcade.FCStd (parts, stack, keys and hardware as separate coloured objects, for
+looking at) and build/arcade.step.
 """
 
+import math
 import os
 import sys
 
@@ -19,13 +22,10 @@ import Part  # noqa: E402
 
 import arcade_common as ac  # noqa: E402
 
-PARTS = ["bezel", "deck", "cheek_L", "cheek_R", "brace_front", "brace_rear", "brace_top",
-         "battery_strap", "ano_mount"]
-COLORS = {"bezel": (0.10, 0.10, 0.12), "deck": (0.10, 0.10, 0.12),
-          "cheek_L": (0.85, 0.20, 0.30), "cheek_R": (0.85, 0.20, 0.30),
-          "brace_front": (0.10, 0.10, 0.12), "brace_rear": (0.10, 0.10, 0.12),
-          "brace_top": (0.85, 0.20, 0.30), "battery_strap": (0.10, 0.10, 0.12),
-          "ano_mount": (0.10, 0.10, 0.12)}
+PARTS = ["chassis", "bezel", "deck", "cradle", "handle"]
+COLORS = {"chassis": (0.85, 0.20, 0.30), "bezel": (0.10, 0.10, 0.12),
+          "deck": (0.10, 0.10, 0.12), "cradle": (0.10, 0.10, 0.12),
+          "handle": (0.85, 0.20, 0.30)}
 
 shapes = {}
 for name in PARTS:
@@ -62,28 +62,56 @@ for name, s in shapes.items():
     if v > 0.01:
         print("FAIL overlap ano / %s: %.3f mm3" % (name, v))
 
-# Joints: each should have material from its owner and a cheek around the screw axis.
+# Hardware: heads, and shanks and inserts at their holes' cores, touch nothing.
+hw = Part.Shape()
+hw.read(os.path.join(ac.BUILD, "fasteners_check.brep"))
+for i, f in enumerate(hw.Solids):
+    bad = [(n, v) for n, v in ((n, f.common(sh).Volume) for n, sh in shapes.items()
+                               if f.BoundBox.intersect(sh.BoundBox)) if v > 0.01]
+    c = ac.clash(f, verbose=False)
+    bad += [(n, v) for n, v in c.items() if v > 0.01]
+    bad += [("ano", v) for v in [sum(a.common(f).Volume for a in ano.Solids
+                                     if a.BoundBox.intersect(f.BoundBox))] if v > 0.01]
+    fails += bool(bad)
+    if bad:
+        print("FAIL hardware %d: %s" % (i, ", ".join("%s %.3f mm3" % b for b in bad)))
+print("hardware: %d items checked" % len(hw.Solids))
+
+# Each part's way in, run backwards: no overlap with what is already in place.
 L = ac.layout()
-for j, p in L["joints"].items():
-    side = j[-1]
-    cheek = shapes.get("cheek_" + side)
-    owner = {"bezel": "bezel", "deck": "deck", "foot": None, "top": "brace_top"}[j.split("_")[0]]
-    if j.startswith("foot_front"):
-        owner = "brace_front"
-    elif j.startswith("foot_rear"):
-        owner = "brace_rear"
-    sx = -1 if side == "L" else 1
-    # A ring round the pilot (r 1.1), 1 to 5 mm in from the cheek face.
-    a = App.Vector(p[0] - sx * 5.0, p[1], p[2])
-    probe_in = (Part.makeCylinder(2.5, 4.0, a, App.Vector(sx, 0, 0))
-                .cut(Part.makeCylinder(1.4, 4.0, a, App.Vector(sx, 0, 0))))
-    probe_ch = Part.makeCylinder(2.2, 4.0, App.Vector(p[0], p[1], p[2]), App.Vector(sx, 0, 0))
-    got_o = shapes[owner].common(probe_in).Volume if owner in shapes else 0
-    got_c = cheek.common(probe_ch).Volume if cheek else 0
-    ok = got_o > 0.5 and got_c > 1.0
-    fails += not ok
-    print("%-4s joint %-15s owner %-11s %.1f mm3  cheek %.1f mm3" % (
-        "PASS" if ok else "FAIL", j, owner, got_o, got_c))
+
+
+def sweep(label, moving, fixed, d, run, step=2.0):
+    worst = 0.0
+    for k in range(1, int(run / step) + 1):
+        off = App.Vector(*d) * (k * step)
+        for m in moving:
+            mm = m.copy()
+            mm.translate(off)
+            for f in fixed:
+                if mm.BoundBox.intersect(f.BoundBox):
+                    worst = max(worst, mm.common(f).Volume)
+    ok = worst < 0.01
+    print("%-4s sweep %-34s worst %.3f mm3" % ("PASS" if ok else "FAIL", label, worst))
+    return not ok
+
+
+near = lambda body, box: [x for x in body.Solids if x.BoundBox.intersect(box)]
+n = App.Vector(*L["stack"]["normal_to_player"])
+feet = App.BoundBox(-40, -80, -1, 90, 80, 10.5)
+fails += sweep("bezel+cradle+stack, out to the front", [shapes["bezel"], shapes["cradle"]] +
+               near(stack, feet), [shapes["chassis"]], n, 70)
+keys_only = [x for x in keys.Solids if x.BoundBox.XMax < 41]
+fails += sweep("deck+keys, up", [shapes["deck"]] + keys_only,
+               [shapes["chassis"], shapes["bezel"]], (0, 0, 1), 50)
+# The handle's snap barb squeezes through its 4.0 hole by design: sweep it without the pin.
+bar = shapes["handle"].common(Part.makeBox(150 + L["x_in"], 200, 200, App.Vector(-150, -100, -100)))
+fails += sweep("handle (less its snap pin), out to the left", [bar],
+               [shapes["chassis"], shapes["bezel"]] + near(stack, shapes["handle"].BoundBox),
+               (-1, 0, 0), 90, step=3.0)
+fails += sweep("ANO, up off its standoffs", ano.Solids, [shapes["chassis"]],
+               tuple(-v for v in (0, math.sin(math.radians(L["deck_deg"])),
+                                  -math.cos(math.radians(L["deck_deg"])))), 12)
 
 doc = App.newDocument("arcade")
 for name, s in shapes.items():
@@ -95,6 +123,8 @@ ky = doc.addObject("Part::Feature", "neokey_keys")
 ky.Shape = keys
 an = doc.addObject("Part::Feature", "ano")
 an.Shape = ano
+hw_o = doc.addObject("Part::Feature", "hardware")
+hw_o.Shape = Part.read(os.path.join(ac.BUILD, "fasteners.step"))
 fc = os.path.join(ac.BUILD, "arcade.FCStd")
 doc.saveAs(fc)
 Part.makeCompound(list(shapes.values())).exportStep(os.path.join(ac.BUILD, "arcade.step"))
@@ -103,7 +133,7 @@ Part.makeCompound(list(shapes.values())).exportStep(os.path.join(ac.BUILD, "arca
 import zipfile  # noqa: E402
 import re  # noqa: E402
 cols = dict(COLORS, board_stack=(0.05, 0.35, 0.20), neokey_keys=(0.90, 0.90, 0.88),
-            ano=(0.08, 0.08, 0.08))
+            ano=(0.08, 0.08, 0.08), hardware=(0.75, 0.75, 0.78))
 zin = zipfile.ZipFile(fc)
 items = {n: zin.read(n) for n in zin.namelist()}
 zin.close()

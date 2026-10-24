@@ -67,25 +67,23 @@ The stand is a skeleton. It has no walls. The screen and the keys sit on two sep
 - One STEMMA QT cable joins the two.
 - Ports face the player's left. The USB-C, the headphone jack and SW1 all sit on the board's right edge, and their keep-out circles run along -X. These are 14 mm, 11 mm and 9 mm across.
 
-### Cheeks and joints
+### Chassis and joints
 
-- Two cheeks, one each side, 4 mm thick. Their inner faces are at x = +-39.5.
-- Every joint is an M2.5 screw along world X at x = +-39.5. There are 14 joints, 7 per side:
-  - bezel top and bottom
-  - deck front and back
-  - foot front and rear
-  - top rear
-- Each joint has a boss on its owning part, 6.0 mm across, with a 2.2 mm pilot 6 mm deep. The boss ends flush with the cheek.
-- Each cheek has a 2.8 mm clear hole and a 4.8 mm counterbore on its outer face, with at least 3.5 mm of material round each hole.
+- The chassis is one print: two cheeks, 4 mm thick, with inner faces at x = +-39.5, the front and rear foot bars, and the ANO mount.
+- Everything between the cheeks stops 0.25 mm short of each inner face.
+- The bezel and the deck each have four bosses, 6.0 mm across, at the layout joints. On each part, one pair of bosses takes heat inserts (3.1 mm holes, 3.8 mm deep), and the other pair has 4.0 mm pegs, 1.2 mm long.
+- The pegs sit in slots on the cheeks' inner faces, 4.4 mm wide and 1.5 mm deep. The bezel's slots open toward the player, the way the bezel slides in. The deck's open straight up, the way the deck drops in.
+- At the insert bosses, each cheek has a 2.8 mm clear hole and a 4.8 x 1.5 mm counterbore on its outer face, for an M2.5 x 8.
+- The handle pushes through a 7.4 mm hole in the left cheek and snaps into a 4.0 mm hole in the right one.
 
 ### Parts
 
-- Bezel: a frame over the display, two stiles down the sides, and a chin under the board's bottom edge. The four display screws go through the bezel, so the bezel carries the stack. Longer M2.5 screws run into the brass standoffs.
-- Deck: the MX switch plate, 5.0 mm above the NeoKey face, with four standoffs and a front rib. Its back edge meets the bezel chin, so it has no rib there. The MX spec hole is 14.0 mm. The deck prints it at 14.1 mm to allow for FDM holes printing small.
-- Battery strap: a ladder across the lower half of the LiPo, where the display does not cover it. Two tabs stop it sliding down the slope. Its end plates sit on the back of the bezel stiles.
-- Braces: front and rear foot bars on the desk, and a round top bar that doubles as a carry handle.
-- ANO mount: holds the ANO rotary encoder (6310) for the thumb, past the right end of the keys and toward the player, at the keys' 10 degrees. The wheel centre is 35 mm right of the last key and 39 mm closer, and sits 12 mm below the keycap tops. An arm on the right cheek's outer face takes the two right deck screws, four standoffs carry the ANO, and the front rail runs to the desk so a press does not lever the stand. The ANO's STEMMA QT port faces the stand, so the cable from the NeoKey's right port runs through the cheek window.
-- Min wall is 1.6 mm, for printing with a 0.4 mm nozzle. Clearance to the real parts is 0.3 mm or more.
+- Bezel: a frame over the display, two stiles down the sides, and a chin under the board's bottom edge. Four M2.5 x 16 from the board side clamp the board, the cradle and the display to it, into inserts in its back.
+- Cradle: four 6 mm posts that span the 9.5 mm between the display and the board at H1 to H4, side rails, and two bars across the LiPo's lower half with two tabs that stop it sliding down the slope. It replaces the brass standoffs and the battery strap. The rails lift over the two parts on the display's back.
+- Deck: the MX switch plate, 5.0 mm above the NeoKey face, with four standoffs and a front rib. Two standoffs take inserts and two carry pins into the NeoKey's holes. Its back bosses sit under the bezel chin, which keeps them down. The MX spec hole is 14.0 mm. The deck prints it at 14.1 mm to allow for FDM holes printing small.
+- Handle: a 7 mm rod with a flange on the left and a split, barbed snap on the right.
+- ANO mount, part of the chassis: holds the ANO rotary encoder (6310) for the thumb, past the right end of the keys and toward the player, at the keys' 10 degrees. The wheel centre is 35 mm right of the last key and 39 mm closer, and sits 12 mm below the keycap tops. An arm joins it to the right cheek's outer face, with an open bore over the right front deck screw. Four standoffs carry the ANO, two with inserts and two with pins, and the front rail runs to the desk so a press does not lever the stand. The ANO's STEMMA QT port faces the stand, so the cable from the NeoKey's right port runs through the cheek window.
+- Min wall is 1.6 mm, for printing with a 0.4 mm nozzle, and 1.1 mm round the inserts. Clearance to the real parts is 0.3 mm or more.
 
 ### Checks in assemble_arcade.py
 
@@ -94,4 +92,5 @@ The script writes `arcade.FCStd` and `arcade.step`, and it prints a PASS or FAIL
 - Each part is one valid solid.
 - Each part clashes with the stack and the keys by under 0.01 mm3. These are the real board models.
 - No two parts overlap by more than 0.01 mm3.
-- Each joint has more than 0.5 mm3 of material from its owner on the screw axis, and more than 1.0 mm3 from the cheek.
+- The 12 screws and 12 inserts (`fasteners.py`) touch nothing: heads at full size, shanks and inserts at their holes' cores.
+- Each part's way in, run backwards in 2 mm steps, hits nothing already in place: the bezel with the stack out to the front, the deck with the keys straight up, the handle out to the left, and the ANO up off its standoffs.

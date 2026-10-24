@@ -40,7 +40,7 @@ The four boards plug into one single-sided milled PCB. It has top copper only, 0
 
 ## The stand
 
-A minimal "mini arcade" skeleton. The screen tilts back 65 degrees. The keys sit on their own deck in front, at 10 degrees. Two red cheeks join the parts, held with M2.5 screws. A small mount on the right cheek holds the ANO past the end of the keys, closer to you, for the thumb.
+A minimal "mini arcade" skeleton. The screen tilts back 65 degrees. The keys sit on their own deck in front, at 10 degrees. It is five printed parts held by 12 M2.5 screws into brass heat inserts, so it comes apart and goes back together easily. The red chassis is both cheeks, the feet and the ANO mount in one piece. The ANO sits past the end of the keys, closer to you, for the thumb.
 
 ![turntable](docs/media/blender/turntable.gif)
 

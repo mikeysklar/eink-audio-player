@@ -1,26 +1,23 @@
 # eink-audio-player stand
 
-The stand is a skeleton, not a box. Two side frames (cheeks) hold the e-ink screen tilted
-back at 65 degrees and the key deck in front at 10 degrees, and cross braces tie the
-cheeks together on the desk. The bezel frames the e-ink display and carries the board
-stack on four M2.5 screws. The deck is the MX switch plate for the NeoKey, and the
-battery strap is a ladder across the LiPo's lower half. Every joint is one M2.5
-self-tapping screw driven into a 2.2 mm pilot, along X at x = ±39.5 mm. The USB-C port,
-headphone jack and SW1 knob stay clear, and the STEMMA QT cable from the Feather runs to
-the NeoKey through an open path at the back. All parts are built in one shared frame
-(`layout.py` writes `layout.json`), checked against the real board models, and checked
-against each other by `assemble_arcade.py`.
+The stand is a skeleton, not a box, in five printed parts. The red chassis is both side
+frames (cheeks), the two foot bars and the ANO mount in one piece. It holds the e-ink
+screen tilted back at 65 degrees and the key deck in front at 10 degrees. The bezel
+frames the e-ink display and carries the board stack, clamped through the cradle by four
+M2.5 x 16 screws. The bezel slides in from the front and the deck drops in from above.
+Pegs locate each one in slots in the cheeks, and two M2.5 x 8 screws hold each. Every
+screw goes into a brass heat insert: 12 screws in all (`parts/fasteners.py` places them).
+The handle snaps in with no screws. The USB-C port, headphone jack and SW1 knob stay
+clear, and the STEMMA QT cables run through windows in the cheeks. All parts are built in
+one shared frame (`layout.py` writes `layout.json`) and checked against the real board
+models, against each other, and along the way each one goes in, by `assemble_arcade.py`.
 
 | Part | What it does | Print orientation | Volume (cm³) |
 |---|---|---|---|
-| `bezel` | Frame over the e-ink, two stiles down to the cheeks, chin under the board edge the stack rests on | Front face down | 15.67 |
-| `deck` | MX switch plate over the NeoKey, four standoffs, front rib, end bosses to the cheeks | On its back edge | 3.06 |
-| `cheek_L` | Left side frame: arcade profile, clear holes and counterbores at each joint | Flat on outer face | 8.46 |
-| `cheek_R` | Right side frame, mirror of `cheek_L` about X = 0 | Flat on outer face | 8.46 |
-| `brace_front` | Front foot bar tying the cheeks on the desk | Flat | 4.69 |
-| `brace_rear` | Rear foot bar tying the cheeks on the desk | Flat | 4.69 |
-| `brace_top` | Round top bar across the cheeks, doubles as a carry handle | On its end or lying down | 3.00 |
-| `battery_strap` | Ladder over the LiPo, two tabs against the slope, end plates on the bezel stiles | Stile face down | 1.67 |
-| `ano_mount` | Holds the ANO rotary encoder (6310) for the thumb, past the right end of the keys at 10 degrees. Arm on the right cheek takes the two right deck screws (M2.5 x 12), front rail to the desk | As it sits, rail on the bed, supports | 3.41 |
+| `chassis` | Both cheeks, the front and rear foot bars, and the ANO mount (6310) past the right end of the keys. Slots for the bezel and deck pegs, counterbored holes for their screws, holes for the handle | Upright, tree supports | 30.38 |
+| `bezel` | Frame over the e-ink, two stiles down to the cheeks, chin under the board edge. Inserts for the stack and the top screws, pegs at the bottom | Front face down | 15.72 |
+| `deck` | MX switch plate over the NeoKey, two insert standoffs and two pins, front rib, pegs at the back, inserts at the front | On its back edge | 3.15 |
+| `cradle` | Four posts between the display and the board, rails, and the bars and tabs that hold the LiPo | Display face down | 3.88 |
+| `handle` | Round top bar and carry handle: pushes through the left cheek, snaps into the right | Lying on its flat | 3.19 |
 
 Volumes are the solid volumes from `assemble_arcade.py` (FreeCAD, one solid per part).

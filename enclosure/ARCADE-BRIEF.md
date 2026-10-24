@@ -36,9 +36,10 @@ Rules (from Mikey's CAD skill; each produced a wrong part before):
   printable flat on one face without support where possible (say which face goes down).
 - Skeleton look: thin members (bars 4-6 mm wide), generous open areas, rounded/chamfered
   ends where cheap. No solid panels except where something must be held.
-- Joints: see layout.json "joints" and "joints_note": every joint is an M2.5 screw along
-  world X at x = +-39.5 (the cheeks' inner faces). Your part's boss must END FLUSH at
-  x = +-39.5 (not past it) at exactly the given world point.
+- Joints: see layout.json "joints". A part between the cheeks ends ac.END_GAP (0.25) short
+  of x = +-39.5, with its boss at exactly the given world point. A screwed boss takes a
+  heat insert (ac.insert_hole); the other boss of the pair has an ac.STUB_D x STUB_LEN peg
+  into a slot in the cheek (chassis.py). Screws: parts/fasteners.py; 12 in all.
 - Ports on the player's LEFT (layout.json ports_world): USB-C, headphone jack, SW1 knob
   keep-out cylinders along -X from each mouth out past x = -50, with the given keepout_d.
   Nothing may cross them. The Feather's STEMMA QT cable runs from the stack's back to the
