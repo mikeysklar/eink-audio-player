@@ -1,6 +1,10 @@
 # eink-audio-player
 
-A palm-sized MP3 player with a 2.13 inch e-ink screen and four physical keys. Site: https://mikeysklar.github.io/eink-audio-player/
+A desktop audio player with a quad-colour e-ink screen, four keys and a thumb wheel. It will let you pick a letter to jump straight to an artist, album or song, so you never scroll through a long list.
+
+It will also play FLAC files at up to 24-bit/96 kHz, higher quality than a CD. Some people get frisson, a chill or goose bumps on the neck, from music they love, and that slightly better fidelity can make it easier to feel.
+
+Site: https://mikeysklar.github.io/eink-audio-player/
 
 Docs: [Hardware](docs/HARDWARE.md) · [Design](docs/DESIGN.md) · [Printing](docs/PRINTING.md)
 
@@ -12,7 +16,7 @@ Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.i
 
 ## How it works
 
-- An Adafruit Feather RP2350 reads MP3 files from a microSD card on the display's EYESPI breakout, over SPI.
+- An Adafruit Feather RP2350 reads MP3 files (FLAC planned) from a microSD card on the display's EYESPI breakout, over SPI.
 - A TLV320DAC3100 DAC takes I2S from the Feather on A0, A1 and A2, and drives the headphone jack.
 - The 2.13 inch quad-colour e-ink screen shows the artist and track.
 - A NeoKey 1x4 on STEMMA QT gives next, previous, play and artist.
