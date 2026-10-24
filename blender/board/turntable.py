@@ -67,7 +67,7 @@ GROUPS = {
     "feather": ["A1"], "tlv": ["A3"], "eyespi": ["A7"],
     "sockets": ["J1", "J2", "J4", "J5", "J9", "J10"],
     "fixed": ["SW1", "R1", "R2", "R3", "R4"],
-    "battery": ["BT1"], "display": ["DS1"], "neokey": ["A5"],
+    "battery": ["BT1"], "display": ["DS1"], "neokey": ["A5", "ANO1"],
 }
 # Male header strips under the Feather and TLV (their STEPs have none): socket -> group
 HEADERS = {"J1": "feather", "J2": "feather", "J9": "tlv", "J10": "tlv"}
@@ -187,8 +187,11 @@ def build(mats):
     for ref, group in HEADERS.items():
         header_strip(ref, mats).parent = pivots[group]
 
+    bpy.context.view_layer.update()
     # The four MX switch + keycap blocks (Cherry MX keycap.wrl) drop further off the NeoKey
-    keys = [obj for obj in GLB_MESHES["A5"] if obj.name.startswith("=>[0:1:1:18]")]
+    # (the only A5 meshes reaching more than 3 mm out past its face, board z -12.03)
+    keys = [obj for obj in GLB_MESHES["A5"]
+            if min((obj.matrix_world @ Vector(c)).z for c in obj.bound_box) < -15.0 * MM]
     pivots["keycaps"].parent = pivots["neokey"]
     for obj in keys:
         world = obj.matrix_world.copy()
@@ -199,15 +202,6 @@ def build(mats):
     recolor(GLB_MESHES["DS1"], (0.56, 0.66, 0.56), mats["eink"])  # KiCad's grey-green -> paper
     recolor(GLB_MESHES["A5"], (0.79, 0.79, 0.75), mats["keycap"])
     recolor(GLB_MESHES["BT1"], None, mats["pouch"])
-    for obj in GLB_MESHES["A7"]:  # hand-made EYESPI STEP has no colours
-        name = obj.name.lower()
-        obj.data.materials.clear()
-        obj.data.materials.append(mats["mask"] if "board" in name else
-                                  mats["fpc"] if "fpc" in name else mats["header"])
-        print(f"[eink-audio-player] A7 mesh {obj.name} -> {obj.data.materials[0].name}")
-    for ref in ("A1", "A3", "A5", "DS1"):  # Adafruit's olive CAD boards -> black mask, ENIG pads
-        recolor(GLB_MESHES[ref], (0.188, 0.156, 0.061), mats["mask"])
-        recolor(GLB_MESHES[ref], (0.96, 0.66, 0.40), mats["enig"])
 
     for name, (offset, out, back) in MOVES.items():
         key_move(pivots[name], offset, out, back)

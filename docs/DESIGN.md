@@ -84,6 +84,7 @@ The stand is a skeleton. It has no walls. The screen and the keys sit on two sep
 - Deck: the MX switch plate, 5.0 mm above the NeoKey face, with four standoffs and a front rib. Its back edge meets the bezel chin, so it has no rib there. The MX spec hole is 14.0 mm. The deck prints it at 14.1 mm to allow for FDM holes printing small.
 - Battery strap: a ladder across the lower half of the LiPo, where the display does not cover it. Two tabs stop it sliding down the slope. Its end plates sit on the back of the bezel stiles.
 - Braces: front and rear foot bars on the desk, and a round top bar that doubles as a carry handle.
+- ANO mount: holds the ANO rotary encoder (6310) for the thumb, past the right end of the keys and toward the player, at the keys' 10 degrees. The wheel centre is 35 mm right of the last key and 39 mm closer, and sits 12 mm below the keycap tops. An arm on the right cheek's outer face takes the two right deck screws, four standoffs carry the ANO, and the front rail runs to the desk so a press does not lever the stand. The ANO's STEMMA QT port faces the stand, so the cable from the NeoKey's right port runs through the cheek window.
 - Min wall is 1.6 mm, for printing with a 0.4 mm nozzle. Clearance to the real parts is 0.3 mm or more.
 
 ### Checks in assemble_arcade.py

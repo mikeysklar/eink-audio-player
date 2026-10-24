@@ -16,11 +16,12 @@ BLACK = (0.08, 0.08, 0.09, 1.0)
 GREY = (0.82, 0.82, 0.82, 1.0)
 PCB_GREEN = (0.05, 0.35, 0.20, 1.0)
 KEY_WHITE = (0.9, 0.9, 0.88, 1.0)
-PARTS = ["bezel", "deck", "cheek_L", "cheek_R", "brace_front", "brace_rear", "brace_top", "battery_strap"]
+PARTS = ["bezel", "deck", "cheek_L", "cheek_R", "brace_front", "brace_rear", "brace_top", "battery_strap",
+         "ano_mount"]
 LABEL = {
     "bezel": "bezel (display)", "deck": "deck (keys)", "cheek_L": "cheek L", "cheek_R": "cheek R",
     "brace_front": "brace front", "brace_rear": "brace rear", "brace_top": "brace top",
-    "battery_strap": "battery strap",
+    "battery_strap": "battery strap", "ano_mount": "ANO mount (thumb)",
 }
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -112,8 +113,8 @@ if mode == "sheet":
     for n, (o, cx, cy, dims) in objs.items():
         label(LABEL[n], (cx - 60, cy - 75, 0), 10.0)
     # Shared iso-like camera from front-left, top-down bias
-    target = Vector((-30, 80, 0)) if mode == "sheet" else Vector((0, 15, 40))
-    ortho_cam(target, Vector((-0.7, -1.0, 0.85)), 720)
+    target = Vector((-45, 10, 0))    # three rows of up to four
+    ortho_cam(target, Vector((-0.7, -1.0, 0.85)), 740)
 else:
     for n in PARTS:
         import_part(n)
@@ -123,8 +124,8 @@ else:
         o.name = name
         o.data.materials.clear()
         o.data.materials.append(m)
-    target = Vector((0, 15, 40))
-    ortho_cam(target, Vector((-1.0, -1.1, 0.8)), 215)
+    target = Vector((18, -5, 35))    # the ANO mount reaches out to x 84, y -71
+    ortho_cam(target, Vector((-1.0, -1.1, 0.8)), 250)
 
 bpy.ops.object.light_add(type="SUN", location=(0, 0, 0))
 scene.render.image_settings.file_format = "PNG"

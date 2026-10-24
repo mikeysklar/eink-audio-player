@@ -16,6 +16,7 @@ Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.i
 - A TLV320DAC3100 DAC takes I2S from the Feather on A0, A1 and A2, and drives the headphone jack.
 - The 2.13 inch quad-colour e-ink screen shows the artist and track.
 - A NeoKey 1x4 on STEMMA QT gives next, previous, play and artist.
+- An ANO rotary encoder on the stand gives the thumb a wheel and five buttons. It chains off the NeoKey over STEMMA QT.
 - A 2000 mAh LiPo powers it. A slide switch turns it on and off.
 
 ## The board
@@ -32,13 +33,14 @@ The four boards plug into one single-sided milled PCB. It has top copper only, 0
 
 ![board turntable](docs/media/blender/board-turntable.gif)
 
-- `kicad/` has the KiCad project and the 3D models it uses.
+- `kicad/` has the KiCad project and the 3D models it uses. The ANO is in it too, as a reference part off the board, where the stand puts it.
+- `kicad/3d/adafruit-hq/` rebuilds the board models: Adafruit's CAD parts on Adafruit's own boards, with mask, silkscreen and pads.
 - `kicad/fab/` has the Gerber and drill files for milling or a board house.
 - `kicad/scripts/` has the scripts that generate the board and check the layout plan.
 
 ## The stand
 
-A minimal "mini arcade" skeleton. The screen tilts back 65 degrees. The keys sit on their own deck in front, at 10 degrees. Two red cheeks join the parts, held with M2.5 screws.
+A minimal "mini arcade" skeleton. The screen tilts back 65 degrees. The keys sit on their own deck in front, at 10 degrees. Two red cheeks join the parts, held with M2.5 screws. A small mount on the right cheek holds the ANO past the end of the keys, closer to you, for the thumb.
 
 ![turntable](docs/media/blender/turntable.gif)
 
@@ -59,6 +61,7 @@ A minimal "mini arcade" skeleton. The screen tilts back 65 degrees. The keys sit
 | [EYESPI breakout](https://www.adafruit.com/product/5613) | 5613 |
 | [NeoKey 1x4](https://www.adafruit.com/product/4980) | 4980 |
 | [LiPo 2000 mAh](https://www.adafruit.com/product/2011) | 2011 |
+| [ANO rotary encoder, I2C](https://www.adafruit.com/product/6310) | 6310 |
 
 Full parts list, pin map and screws: [docs/HARDWARE.md](docs/HARDWARE.md).
 

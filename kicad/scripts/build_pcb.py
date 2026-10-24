@@ -310,6 +310,18 @@ for kx in (-28.575, -9.525, 9.525, 28.575):
     m.m_Offset = pcbnew.VECTOR3D(kx, 0, NK4_Z + NK4_D)
     nk4.Models().push_back(m)
 
+# --- ANO rotary encoder (6310), reference only: it is not on this board but on the
+# stand's ano_mount (arcade/parts/ano_mount.py), past the right-hand end of the keys and
+# toward the player, in the keys' plane. Placed where the stand puts it relative to the
+# NeoKey (board frame, from arcade's layout.json keys matrix), so the 3D view shows the
+# whole control layout: off the board, beyond its bottom-left corner. Its STEMMA QT
+# chains off the NeoKey's. Wheel facing out with the keys.
+ANO_DX, ANO_DY = -63.82, 36.885                 # its centre from the NeoKey's
+ANO_Z = 21.66                                   # its PCB front, below the board
+back_block("ANO1", "ANO rotary encoder (6310), stand-mounted, reference",
+           "5740 ANO Rotary Encoder QT.step", 40.64, 35.56, ANO_Z,
+           BX + W / 2 + ANO_DX, NK4_Y + ANO_DY, rot=(180, 0, 90))
+
 # --- mounting holes on the display's pattern (2.54 mm in from its corners;
 # the top two are the board's top corners, beside the EYESPI breakout), the
 # Feather's corner hole, the TLV's corner hole at bottom-right and one on bare
@@ -365,7 +377,7 @@ PIN_NAME = {"SW1": {"1": "A", "2": "B", "3": "C"}}
 # Render-only parts: no symbol, out of BOM, position files and parity.
 for fp in board.GetFootprints():
     ref = fp.GetReference()
-    if ref in ("A1", "A3", "A5", "A7", "DS1", "BT1"):
+    if ref in ("A1", "A3", "A5", "A7", "DS1", "BT1", "ANO1"):
         fp.SetBoardOnly(True)
         fp.SetExcludedFromBOM(True)
         fp.SetExcludedFromPosFiles(True)

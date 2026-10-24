@@ -43,7 +43,8 @@ UP_KEYS = Vector(LAYOUT["keys"]["normal_up"])  # out of the NeoKey face
 # Printed parts and their colours (arcade/assemble_arcade.py COLORS)
 RED, BLACK = (0.85, 0.20, 0.30), (0.10, 0.10, 0.12)
 PRINTED = {"bezel": BLACK, "deck": BLACK, "cheek_L": RED, "cheek_R": RED,
-           "brace_front": BLACK, "brace_rear": BLACK, "brace_top": RED, "battery_strap": BLACK}
+           "brace_front": BLACK, "brace_rear": BLACK, "brace_top": RED, "battery_strap": BLACK,
+           "ano_mount": BLACK}
 
 # Board parts (export.sh references) -> explode group; all ride on "stack" except the NeoKey
 STACK_GROUPS = {
@@ -67,6 +68,7 @@ MOVES = {
     "brace_rear": (Vector((0, 26, 0)), (1.2, 2.4), (5.8, 7.0)),
     "bezel": (N_PLAYER * 56 + Vector((0, 4, 34)), (1.2, 2.6), (5.8, 7.0)),
     "battery_strap": (N_PLAYER * 26 + Vector((0, 0, -4)), (1.4, 2.6), (5.6, 6.8)),
+    "ano_mount": (Vector((14, -30, -12)), (1.3, 2.5), (5.7, 6.9)),  # under the ANO (keys)
     "stack": (Vector((0, 4, 34)), (1.6, 3.0), (5.2, 6.6)),
     "display": (N_PLAYER * 30, (2.2, 3.4), (5.0, 6.2)),
     "battery": (N_PLAYER * 14, (2.3, 3.4), (5.0, 6.1)),
@@ -253,10 +255,15 @@ def build(mats):
     frame.matrix_world = body_matrix("keys")
     glb["A5"] = import_glb("A5", frame)
     fix_materials(glb["A5"], done)
+    glb["ANO1"] = import_glb("ANO1", frame)  # the ANO on ano_mount rides with the keys
+    fix_materials(glb["ANO1"], done)
     bpy.context.view_layer.update()
-    # The four MX switch + keycap blocks (Cherry MX keycap.wrl) lift further off the NeoKey
+    # The four MX switch + keycap blocks (Cherry MX keycap.wrl) lift further off the NeoKey:
+    # the only A5 meshes reaching more than 3 mm out past its face (board z -12.03).
     caps = pivots["keycaps"] = empty("Explode keycaps", keys)
-    blocks = [obj for obj in glb["A5"] if obj.name.startswith("=>[0:1:1:18]")]
+    inv = frame.matrix_world.inverted()
+    blocks = [obj for obj in glb["A5"]
+              if min((inv @ obj.matrix_world @ Vector(c)).z for c in obj.bound_box) < -15.0 * MM]
     for obj in blocks:
         world = obj.matrix_world.copy()
         obj.parent = caps
@@ -272,14 +279,6 @@ def build(mats):
     recolor(glb["DS1"], (0.56, 0.66, 0.56), mats["eink"])  # KiCad's grey-green -> paper
     recolor(glb["A5"], (0.79, 0.79, 0.75), mats["keycap"])
     recolor(glb["BT1"], None, mats["pouch"])
-    for obj in glb["A7"]:  # hand-made EYESPI STEP has no colours
-        name = obj.name.lower()
-        obj.data.materials.clear()
-        obj.data.materials.append(mats["mask"] if "board" in name else
-                                  mats["fpc"] if "fpc" in name else mats["header"])
-    for ref in ("A1", "A3", "A5", "DS1"):  # Adafruit's olive CAD boards -> black mask, ENIG
-        recolor(glb[ref], (0.188, 0.156, 0.061), mats["mask"])
-        recolor(glb[ref], (0.96, 0.66, 0.40), mats["enig"])
     return pivots
 
 

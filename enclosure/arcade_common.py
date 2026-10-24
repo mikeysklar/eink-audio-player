@@ -59,7 +59,7 @@ def _build_cache():
         if o.TypeId == "App::Part" and o.InList and all(not q.InList for q in o.InList):
             if o.Shape.isNull():
                 continue
-            (neokey if o.Label.startswith("4980") else stack).append(o.Shape.copy())
+            (neokey if o.Label.startswith(("4980", "5740")) else stack).append(o.Shape.copy())
     for o in doc.Objects:
         if (o.TypeId == "Part::Feature" and o.InList and all(not q.InList for q in o.InList)
                 and not o.Shape.isNull()):

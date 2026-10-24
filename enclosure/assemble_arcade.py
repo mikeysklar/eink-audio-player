@@ -20,11 +20,12 @@ import Part  # noqa: E402
 import arcade_common as ac  # noqa: E402
 
 PARTS = ["bezel", "deck", "cheek_L", "cheek_R", "brace_front", "brace_rear", "brace_top",
-         "battery_strap"]
+         "battery_strap", "ano_mount"]
 COLORS = {"bezel": (0.10, 0.10, 0.12), "deck": (0.10, 0.10, 0.12),
           "cheek_L": (0.85, 0.20, 0.30), "cheek_R": (0.85, 0.20, 0.30),
           "brace_front": (0.10, 0.10, 0.12), "brace_rear": (0.10, 0.10, 0.12),
-          "brace_top": (0.85, 0.20, 0.30), "battery_strap": (0.10, 0.10, 0.12)}
+          "brace_top": (0.85, 0.20, 0.30), "battery_strap": (0.10, 0.10, 0.12),
+          "ano_mount": (0.10, 0.10, 0.12)}
 
 shapes = {}
 for name in PARTS:
@@ -35,6 +36,7 @@ for name in PARTS:
     shapes[name] = Part.read(path)
 
 stack, keys = ac.bodies()
+ano = Part.read(os.path.join(ac.BUILD, "ano.step"))     # placed by parts/ano_mount.py
 fails = 0
 for name, s in shapes.items():
     c = ac.clash(s, verbose=False)
@@ -53,6 +55,12 @@ for i, a in enumerate(names):
         if v > 0.01:
             fails += 1
             print("FAIL overlap %s / %s: %.3f mm3" % (a, b, v))
+
+for name, s in shapes.items():
+    v = sum(a.common(s).Volume for a in ano.Solids if a.BoundBox.intersect(s.BoundBox))
+    fails += v > 0.01
+    if v > 0.01:
+        print("FAIL overlap ano / %s: %.3f mm3" % (name, v))
 
 # Joints: each should have material from its owner and a cheek around the screw axis.
 L = ac.layout()
@@ -85,6 +93,8 @@ st = doc.addObject("Part::Feature", "board_stack")
 st.Shape = stack
 ky = doc.addObject("Part::Feature", "neokey_keys")
 ky.Shape = keys
+an = doc.addObject("Part::Feature", "ano")
+an.Shape = ano
 fc = os.path.join(ac.BUILD, "arcade.FCStd")
 doc.saveAs(fc)
 Part.makeCompound(list(shapes.values())).exportStep(os.path.join(ac.BUILD, "arcade.step"))
@@ -92,7 +102,8 @@ Part.makeCompound(list(shapes.values())).exportStep(os.path.join(ac.BUILD, "arca
 # Colours go straight into GuiDocument.xml (no ViewObject headless).
 import zipfile  # noqa: E402
 import re  # noqa: E402
-cols = dict(COLORS, board_stack=(0.05, 0.35, 0.20), neokey_keys=(0.90, 0.90, 0.88))
+cols = dict(COLORS, board_stack=(0.05, 0.35, 0.20), neokey_keys=(0.90, 0.90, 0.88),
+            ano=(0.08, 0.08, 0.08))
 zin = zipfile.ZipFile(fc)
 items = {n: zin.read(n) for n in zin.namelist()}
 zin.close()

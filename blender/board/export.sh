@@ -13,6 +13,6 @@ mkdir -p "$OUT"
 glb() { "$CLI" pcb export glb "$PCB" -f -o "$OUT/$1.glb" --subst-models --user-origin=$ORIGIN "${@:2}" > /dev/null 2>&1; echo "wrote $OUT/$1.glb"; }
 
 glb board --no-components --include-tracks --include-pads --include-zones
-for ref in A1 A3 A7 J1 J2 J4 J5 J9 J10 SW1 R1 R2 R3 R4 BT1 DS1 A5; do
+for ref in A1 A3 A7 J1 J2 J4 J5 J9 J10 SW1 R1 R2 R3 R4 BT1 DS1 A5 ANO1; do
     glb $ref --no-board-body --component-filter $ref
 done

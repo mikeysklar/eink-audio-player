@@ -21,5 +21,6 @@ against each other by `assemble_arcade.py`.
 | `brace_rear` | Rear foot bar tying the cheeks on the desk | Flat | 4.69 |
 | `brace_top` | Round top bar across the cheeks, doubles as a carry handle | On its end or lying down | 3.00 |
 | `battery_strap` | Ladder over the LiPo, two tabs against the slope, end plates on the bezel stiles | Stile face down | 1.67 |
+| `ano_mount` | Holds the ANO rotary encoder (6310) for the thumb, past the right end of the keys at 10 degrees. Arm on the right cheek takes the two right deck screws (M2.5 x 12), front rail to the desk | As it sits, rail on the bed, supports | 3.41 |
 
 Volumes are the solid volumes from `assemble_arcade.py` (FreeCAD, one solid per part).

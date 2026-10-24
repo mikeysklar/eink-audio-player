@@ -1,6 +1,6 @@
 # Printing the eink-audio-player stand
 
-Eight STL files make the stand: nine printed pieces, since there are two cheeks. Each file
+Nine STL files make the stand, one printed piece each. Each file
 is one watertight solid (checked in FreeCAD: no non-manifold edges). The sizes below are
 for each part in the orientation it should print in.
 
@@ -28,9 +28,10 @@ for each part in the orientation it should print in.
 | [brace_rear](../enclosure/stl/brace_rear.stl) | 1 | 79.0 x 6.0 x 10.0 | 4.69 | 5.8 | flat on the desk face | same as brace_front. |
 | [brace_top](../enclosure/stl/brace_top.stl) | 1 | 79.0 x 7.0 x 7.0 | 2.99 | 3.7 | lying down | about 380 mm2 of overhang under the lower half. Use supports, or print it upright. |
 | [battery_strap](../enclosure/stl/battery_strap.stl) | 1 | 79.0 x 22.5 x 9.0 | 1.67 | 2.1 | stile face down | no overhang. |
+| [ano_mount](../enclosure/stl/ano_mount.stl) | 1 | 40.6 x 70.6 x 22.1 | 3.41 | 4.2 | as it sits, rail on the bed | the frame is tilted 10 degrees and the arm overhangs it. Use supports under both. |
 
 Grams are an upper bound: 100% solid PLA at 1.24 g/cm3. A printed part with walls and
-20% infill uses less. Total for all nine pieces: 49.7 cm3, at most 61.6 g.
+20% infill uses less. Total for all nine pieces: 53.1 cm3, at most 65.9 g.
 
 ## Assembly
 
@@ -42,13 +43,17 @@ Use M2.5 screws throughout. The pilots are 2.2 mm, sized for self-tapping M2.5 s
 3. Battery strap. Set the LiPo under the strap. Drive one M2.5 screw from behind into
    each bezel stile.
 4. Cheeks and joints. Fit the two cheeks to the bezel and deck bosses. Screw through the
-   2.8 mm holes on the outer face into the boss pilots.
+   2.8 mm holes on the outer face into the boss pilots. On the right, the ANO mount's arm
+   goes over the two deck joints first, and those two take M2.5 x 12 mm screws.
 5. Braces. Fit brace_front and brace_rear to the feet, and brace_top to the top rear
    joints.
 6. STEMMA QT cable. Route the cable from the Feather to the NeoKey QT connector before
    the last screws go in.
 7. Joint screws. Put in all 14 joint screws: four on the bezel, four on the deck, four
    on the feet and two at the top rear.
+8. ANO. Screw the ANO to the mount's four standoffs, wheel up, and run the 100 mm STEMMA
+   QT cable from its back port through the right cheek's window to the NeoKey.
 
-Total M2.5 count: 4 display screws, 2 battery strap screws, 4 NeoKey screws and 14 joint
-screws, 24 in all.
+Total M2.5 count: 4 display screws, 4 board to standoff screws, 2 battery strap screws,
+4 NeoKey screws, 14 joint screws (two of them 12 mm) and 4 ANO screws, 32 in all. See
+[HARDWARE.md](HARDWARE.md) for lengths.

@@ -17,6 +17,8 @@ stand scripts in `arcade/`.
 | NeoKey 1x4 QT | 4980 | [product/4980](https://www.adafruit.com/product/4980) |
 | LiPo battery, 2000 mAh | 2011 | [product/2011](https://www.adafruit.com/product/2011) |
 | STEMMA QT cable, 200 mm (JST SH to JST SH) | 4401 | [product/4401](https://www.adafruit.com/product/4401) |
+| ANO rotary encoder, I2C, encoder fitted (thumb control) | 6310 | [product/6310](https://www.adafruit.com/product/6310) |
+| STEMMA QT cable, 100 mm (NeoKey to ANO) | 4210 | [product/4210](https://www.adafruit.com/product/4210) |
 | microSD card | any | no PID |
 | Cherry MX compatible key switches, x4 | any | no PID |
 | Keycaps for the four switches | any | no PID |
@@ -25,6 +27,12 @@ Cable choice: the 200 mm cable (PID 4401). The Feather's QT port (`feather_qt` i
 `arcade/layout.json`, at x 6.8 mm) to the NeoKey QT port on the near side (x 35.6 mm,
 `neokey_qt`) is 77 mm in a straight line. The far NeoKey port is 83 mm away. A 100 mm
 cable has no room for the run along the stand, so 200 mm leaves slack.
+
+The ANO chains off the NeoKey's other QT port. That port (x 35.6 mm) faces the right
+cheek, and the plug passes through the cheek's window; the ANO's own port faces back
+toward the stand, about 35 mm away in a straight line. A 100 mm cable (PID 4210) covers
+the bend round the cheek. The ANO is at I2C address 0x49, clear of the NeoKey (0x30) and
+the TLV320 (0x18).
 
 Each board needs headers that match the sockets. The landing pad uses female sockets, so
 the boards take male header pins.
@@ -91,7 +99,8 @@ Feather pins 1, 3 to 10 are open (VBAT, VBUS, D13, D12, D11, D10, D9, D6, D5).
   GPIOs for RP2xxx PIO I2S, and they are.
 - EYESPI pin 3 (GND) reaches ground through the R4 jumper, not directly.
 - The NeoKey and its key switches do not use landing pad pins. They hang off the
-  Feather's STEMMA QT port (SDA and SCL, through the 200 mm cable).
+  Feather's STEMMA QT port (SDA and SCL, through the 200 mm cable). The ANO hangs off
+  the NeoKey's second QT port.
 
 ## Stand hardware
 
@@ -108,7 +117,8 @@ counterbore, then the 6 mm pilot.
 | Joint | Count | Screw |
 |---|---|---|
 | bezel top, bezel bottom (left and right) | 4 | M2.5 x 10 mm |
-| deck back, deck front (left and right) | 4 | M2.5 x 10 mm |
+| deck back, deck front (left) | 2 | M2.5 x 10 mm |
+| deck back, deck front (right, through the ANO mount arm) | 2 | M2.5 x 12 mm |
 | foot front, foot rear (left and right) | 4 | M2.5 x 10 mm |
 | top rear (left and right) | 2 | M2.5 x 10 mm |
 
@@ -144,6 +154,17 @@ The strap plate is 1.7 mm thick. The pilot in the stile is 5 mm of stile from it
 face. A 6 mm screw gives about 4 mm of thread in the stile, and its tip stays inside the
 stile.
 
+### ANO mount
+
+| Part | Count | Screw |
+|---|---|---|
+| M2.5 screw, ANO board into the mount's standoffs | 4 | 6 mm |
+
+The mount's arm sits on the outside of the right cheek and takes the two right deck
+joints: 2.0 mm counterbore in the 4 mm arm, the 4 mm cheek, then the 6 mm pilot in the
+deck boss, so those two are 12 mm. The ANO's 1.6 mm board sits on four printed standoffs
+with 5.5 mm pilots, so a 6 mm screw gives about 4.4 mm of thread.
+
 ### Keys (NeoKey into deck standoffs)
 
 | Part | Count | Screw |
@@ -158,9 +179,10 @@ fully. The standoffs are printed on the deck, so they need no hardware.
 
 | Length | Count | Used for |
 |---|---|---|
-| M2.5 x 6 mm | 10 | 2 battery strap, 4 NeoKey, 4 board to standoff |
+| M2.5 x 6 mm | 14 | 2 battery strap, 4 NeoKey, 4 board to standoff, 4 ANO |
 | M2.5 x 8 mm | 4 | display, bezel to standoff |
-| M2.5 x 10 mm | 14 | cheek joints |
-| **Total** | **28** | |
+| M2.5 x 10 mm | 12 | cheek joints |
+| M2.5 x 12 mm | 2 | right deck joints, through the ANO mount arm |
+| **Total** | **32** | |
 
 Also needed: 4 brass M2.5 standoffs, 9.5 mm (display).

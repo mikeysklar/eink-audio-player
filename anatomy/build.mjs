@@ -44,6 +44,10 @@ const BATT = { x0: 12.03, x1: 49.03, y0: 8.08, y1: 68.08, z0: -7.585, z1: -0.085
 // outer face at z -12.115, key centres from measure_neokey_sw1.json.
 const NK_FACE = -12.115;
 const KEYS = [1.955, 21.005, 40.055, 59.105].map((x) => [x, 18.395]);
+// ANO rotary encoder (6310): not on this board but on the stand, past the keys' right end
+// and toward the player, in their plane (build_pcb.py ANO1). Board frame from the STEP: PCB
+// front (wheel side) at z -21.745, back -20.235; wheel up to -27.545.
+const ANO = { x0: -53.61, x1: -12.97, y0: -36.27, y1: -0.71, cx: -33.285, cy: -18.466, zf: -21.745, zb: -20.235 };
 
 // ---- explode ----
 const LIFT = 28;                 // top-side boards come straight up off their sockets
@@ -59,13 +63,18 @@ const padsOf = (ref) => pcb.pads.filter((p) => p.ref === ref && p.num);
 const netBase = (n) => n.replace(/^\//, "").replace(/_R[1-4]$/, "");
 
 // ---- solids from the STEP ----
+// Groups match on the Adafruit product ID (FreeCAD suffixes repeated labels). Each model is
+// Adafruit's parts on a KiCad board export: its layers (<board>_PCB, _pad, _silkscreen,
+// _soldermask, _copper) are drawn here by hand, so they are skipped.
+const BOARD_LAYER = /_(PCB|pad|silkscreen|soldermask|copper)\d*$/;
 function compsOf(group, skip = () => false) {
   const map = new Map();
+  const pid = group.split(" ")[0];
   for (const s of solids) {
-    if (s.path[1] !== group) continue;
+    if (!s.path[1] || s.path[1].split(" ")[0] !== pid) continue;
     const parent = s.path[s.path.length - 1];
-    const key = parent.startsWith("PCB Component") ? s.label : parent;
-    if (skip(key, s)) continue;
+    const key = parent.startsWith("PCB Component") || s.path.length === 3 ? s.label : parent;
+    if (BOARD_LAYER.test(key) || BOARD_LAYER.test(s.label) || skip(key, s)) continue;
     const b = s.bb;
     const m = map.get(key);
     map.set(key, m ? [Math.min(m[0], b[0]), Math.max(m[1], b[1]), Math.min(m[2], b[2]), Math.max(m[3], b[3]), Math.min(m[4], b[4]), Math.max(m[5], b[5])] : [...b]);
@@ -85,6 +94,7 @@ const kMove = (t) => smooth(t / 0.6), kTurn = (t) => smooth((t - 0.25) / 0.75);
 const corners = (b) => [0, 1].flatMap((i) => [2, 3].flatMap((j) => [4, 5].map((m) => [b[i], b[j], b[m]])));
 const DISPLAY_BB = [0.04, 62.15, 36.74, 76.11, -12.631, -7.627];
 const NEOKEY_BB = [-7.57, 68.63, 7.6, 29.19, -33.615, -8.71];
+const ANO_BB = [ANO.x0, ANO.x1, ANO.y0, ANO.y1, -27.545, -17.2];
 const fitPts = [
   ...corners([0, 61.96, 0, 76.11, 0, 9]),
   ...corners([10.21, 62.21, 29.45, 52.31, 2.9, 17.87 + LIFT]),
@@ -95,7 +105,7 @@ const fitPts = [
 for (let a = 0; a <= 180; a += 10) {
   fitPts.push(...corners(DISPLAY_BB).map((p) => rotYZ(p, D_HINGE, (a * Math.PI) / 180)));
   const t = a / 180, m = kMove(t);
-  fitPts.push(...corners(NEOKEY_BB).map((p) => { const q = rotYZ(p, K_C0, -Math.PI * kTurn(t)); return [q[0], q[1] + (K_C1[0] - K_C0[0]) * m, q[2] + (K_C1[1] - K_C0[1]) * m]; }));
+  fitPts.push(...[NEOKEY_BB, ANO_BB].flatMap(corners).map((p) => { const q = rotYZ(p, K_C0, -Math.PI * kTurn(t)); return [q[0], q[1] + (K_C1[0] - K_C0[0]) * m, q[2] + (K_C1[1] - K_C0[1]) * m]; }));
 }
 const CAM = { azimuth: 38, elevation: 30 };
 const unitP = k.fitProjection(fitPts.map(W3), 1000, 1000, { pad: 0, ...CAM });
@@ -369,8 +379,8 @@ function displayItems() {
     const bb = [...c.bb];
     bb[4] = -9.515;
     if (Math.max(bb[1] - bb[0], bb[3] - bb[2]) < 0.9) continue;
-    const g = c.key === "MICROSD" ? "sd" : c.key.startsWith("EYE_SPI") ? "eyespi-socket" : "display";
-    const decals = c.key === "MICROSD" ? [0, 1, 2, 3, 4].map((i) => ({ pts: [[bb[0] + 1.5, bb[2] + 2 + i * 2.4, bb[5]], [bb[1] - 1.5, bb[2] + 2 + i * 2.4, bb[5]]], n: [0, 0, 1], kind: "line", tone: "faint", closed: false })) : [];
+    const g = c.key.startsWith("MICROSD") ? "sd" : c.key.startsWith("EYE_SPI") ? "eyespi-socket" : "display";
+    const decals = c.key.startsWith("MICROSD") ? [0, 1, 2, 3, 4].map((i) => ({ pts: [[bb[0] + 1.5, bb[2] + 2 + i * 2.4, bb[5]], [bb[1] - 1.5, bb[2] + 2 + i * 2.4, bb[5]]], n: [0, 0, 1], kind: "line", tone: "faint", closed: false })) : [];
     items.push({ ...box3(bb[0], bb[1], bb[2], bb[3], bb[4], bb[5]), tone: Math.max(bb[1] - bb[0], bb[3] - bb[2]) < 1.3 ? "lo" : "mid", layer: 2, g, decals });
   }
   // The panel's own flex tail wraps the east edge from the glass into the 24-pin socket.
@@ -404,7 +414,43 @@ function neokeyItems() {
     const g = c.key.startsWith("JST_SH") ? "nk-qt" : "neokey";
     items.push({ ...box3(bb[0], bb[1], bb[2], bb[3], bb[4], bb[5]), tone: "mid", layer: 4, g, decals: [] });
   }
-  return items;
+  return items.concat(anoItems());
+}
+
+// The ANO swings out with the NeoKey (same frame), as its own object for depth order.
+function anoItems() {
+  const items = [];
+  const { cx, cy, zf, zb } = ANO;
+  const ringAt = (x, y, z, r, n = 20) => circle(x, y, r, n).map(([a, b]) => [a, b, z]);
+  const up = [0, 0, -1];
+  const holes = [[-17.78, -15.24], [-17.78, 15.24], [17.78, -15.24], [17.78, 15.24]].map(([dx, dy]) => [cx + dx, cy + dy]);
+  items.push({ ...pbPrism(pbRoundRect(ANO.x0, ANO.x1, ANO.y0, ANO.y1, 2.54, 4), zf, zb), tone: "mid", layer: 4, g: "ano", decals: [
+    ...holes.map(([x, y]) => ({ pts: ringAt(x, y, zf, 1.25), n: up, kind: "hole" })),
+    ...holes.map(([x, y]) => ({ pts: ringAt(x, y, zb, 1.25), n: [0, 0, 1], kind: "hole" })),
+  ] });
+  // Encoder: square body on the PCB, a 34 mm bezel plate, the ring with its four
+  // direction buttons, and the turning wheel with the centre button.
+  items.push({ ...box3(cx - 16, cx + 16, cy - 16, cy + 16, -23.745, zf), tone: "mid", layer: 3, g: "ano", decals: [] });
+  items.push({ ...box3(cx - 17, cx + 17, cy - 17, cy + 17, -24.345, -23.745), tone: "mid", layer: 2, g: "ano", decals: [] });
+  const arrows = [[0, 1], [1, 0], [0, -1], [-1, 0]].map(([ux, uy]) => {
+    const r = 14.8, w = 1.1, t = [cx + ux * (r + 1.1), cy + uy * (r + 1.1)];
+    const a = [cx + ux * (r - 0.6) - uy * w, cy + uy * (r - 0.6) + ux * w], b = [cx + ux * (r - 0.6) + uy * w, cy + uy * (r - 0.6) - ux * w];
+    return { pts: [a, t, b].map(([x, y]) => [x, y, -27.345]), n: up, kind: "line", tone: "mid", closed: true };
+  });
+  items.push({ ...pbPrism(circle(cx, cy, 17.15, 36), -27.345, -24.345), tone: "mid", layer: 1, g: "ano", decals: arrows });
+  items.push({ ...pbPrism(circle(cx, cy, 12.45, 32), -27.545, -27.345), tone: "hi", layer: 0, g: "ano-wheel", decals: [
+    { pts: ringAt(cx, cy, -27.545, 4.33, 24), n: up, kind: "line", tone: "mid", closed: true },
+    { pts: ringAt(cx, cy, -27.545, 10.6, 32), n: up, kind: "line", tone: "faint", closed: true },
+  ] });
+  // Parts on its back, toward the board: the seesaw ATtiny and two STEMMA QT sockets.
+  for (const c of compsOf("5740 ANO Rotary Encoder QT", (key) => key.startsWith("ENCODER_ANO"))) {
+    const bb = [...c.bb];
+    bb[4] = zb;
+    if (bb[5] <= zb + 0.05 || Math.max(bb[1] - bb[0], bb[3] - bb[2]) < 0.9) continue;
+    const g = c.key.startsWith("STEMMA") ? "ano-qt" : "ano";
+    items.push({ ...box3(bb[0], bb[1], bb[2], bb[3], bb[4], bb[5]), tone: c.key.startsWith("QFN20") ? "hi" : "mid", layer: 5, g, decals: [] });
+  }
+  return items.map((it) => ({ ...it, obj: "ano" }));
 }
 
 // ---- flex: the EYESPI cable from the breakout's FPC socket over the top edge ----
@@ -428,7 +474,7 @@ const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "The E-ink Audio Player, a palm-sized RP2350 music player. A 61 by 76 mm milled single-sided board carries a Feather RP2350, a TLV320DAC3100 DAC with a headphone jack and an EYESPI breakout on SMT sockets; a flex folds over the top edge to a 2.13 inch e-ink on the back, beside a 2000 mAh LiPo and a NeoKey 1x4. Taken apart, the boards lift off their sockets, the e-ink swings open on its flex, the keys turn face up and the LiPo drops, while each function lights up in turn.",
+    "The E-ink Audio Player, a palm-sized RP2350 music player. A 61 by 76 mm milled single-sided board carries a Feather RP2350, a TLV320DAC3100 DAC with a headphone jack and an EYESPI breakout on SMT sockets; a flex folds over the top edge to a 2.13 inch e-ink on the back, beside a 2000 mAh LiPo and a NeoKey 1x4, with an ANO rotary encoder for the thumb past the end of the keys. Taken apart, the boards lift off their sockets, the e-ink swings open on its flex, the keys turn face up and the LiPo drops, while each function lights up in turn.",
   body: [
     `<g data-part="k-back"></g>`,
     `<g data-part="display"></g>`,
@@ -472,6 +518,7 @@ const STEPS = [
   { read: "Display · EYESPI flex → 2.13in e-ink · DC, RST, TCS, BUSY", apart: 1, d: 1, g: ["glass", "display", "eyespi", "flex", "eyespi-socket", "j-eyespi"], nets: ["SCK", "MOSI", "EPD_DC", "EPD_RST", "EPD_TCS", "EPD_BUSY"] },
   { read: "Audio · I2S A0 A1 A2 hop 3V3 on R3 R2 R1 → TLV320DAC3100 → jack", apart: 1, d: 1, g: ["tlv", "dac", "jack", "j-tlv", "r1", "r2", "r3"], nets: ["I2S_BCLK", "I2S_WSEL", "I2S_DIN", "SDA", "SCL"] },
   { read: "Controls · NeoKey 1x4, four MX keys · STEMMA QT I2C", apart: 1, d: 1, g: ["neokey", "keys", "qt", "nk-qt"], nets: [] },
+  { read: "Thumb · ANO wheel + 5 buttons on the stand · chained STEMMA QT, I2C 0x49", apart: 1, d: 1, g: ["ano", "ano-wheel", "ano-qt", "nk-qt"], nets: [] },
 ];
 const STEP_MS = 3400;
 const TOUR_MS = STEPS.length * STEP_MS;
@@ -543,11 +590,11 @@ function swing(items, hinge, a, off = [0, 0]) {
       const pts = it.ribbon.map(([x, z]) => R([x, (it.y0 + it.y1) / 2, z]));
       const h = (it.y1 - it.y0) / 2, off = rot([0, h, 0], [0, 0], a), off2 = rot([0, -h, 0], [0, 0], a);
       const c = pts[Math.floor(pts.length / 2)];
-      return { layer: it.layer, depth: depthOf(W(c), P), html: () => ribbon(pts, [off2, off], it.tone, it.g) };
+      return { obj: it.obj || "", layer: it.layer, depth: depthOf(W(c), P), html: () => ribbon(pts, [off2, off], it.tone, it.g) };
     }
     const V = it.V.map((p) => W(R(p)));
     const c = V.reduce((s, p) => [s[0] + p[0] / V.length, s[1] + p[1] / V.length, s[2] + p[2] / V.length], [0, 0, 0]);
-    return { layer: it.layer, depth: depthOf(c, P), html: () => {
+    return { obj: it.obj || "", layer: it.layer, depth: depthOf(c, P), html: () => {
       const on = lit.has(it.g);
       let out = solidSvg(polyPaths(V, it.F, P), { tone: it.tone, crease: "faint", lit: on });
       for (const dc of it.decals) {
@@ -561,7 +608,11 @@ function swing(items, hinge, a, off = [0, 0]) {
       return '<g data-g="' + it.g + '"' + (on ? " data-on" : "") + '>' + out + "</g>";
     } };
   });
-  list.sort((p, q) => (innerSeen ? p.layer - q.layer : q.layer - p.layer) || p.depth - q.depth);
+  const od = {};
+  for (const it of list) (od[it.obj] = od[it.obj] || []).push(it.depth);
+  for (const o in od) od[o] = od[o].reduce((a, b) => a + b, 0) / od[o].length;
+  list.sort((p, q) => (p.obj !== q.obj ? od[p.obj] - od[q.obj] : 0) ||
+    (innerSeen ? p.layer - q.layer : q.layer - p.layer) || p.depth - q.depth);
   return list.map((it) => it.html()).join("");
 }
 
