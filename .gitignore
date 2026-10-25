@@ -8,3 +8,10 @@ anatomy/node_modules/
 .DS_Store
 *.blend1
 .brief/
+
+# KiCad plots and backups
+kicad/*.gbr
+kicad/*.dxf
+kicad/*.drl
+kicad/*.gbrjob
+kicad/.history/
