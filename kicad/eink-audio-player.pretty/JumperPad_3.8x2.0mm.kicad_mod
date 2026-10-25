@@ -1,0 +1,71 @@
+(footprint "JumperPad_3.8x2.0mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "Fat SMD pad for a hand-soldered jumper wire, no drill")
+	(property "Reference" "TP**"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(uuid "cbbbeb7b-1310-4244-8b39-37f822d7e192")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" "JumperPad_3.8x2.0mm"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "d7ed7799-675d-4821-8374-879d89fd6f8f")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "860776a9-42ee-4779-9810-a8c110c415f9")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b87c53e2-5167-4237-8e76-14c3edba4446")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd exclude_from_bom)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_rect
+		(start -2.15 -1.25)
+		(end 2.15 1.25)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "35b54116-b80e-4b05-854a-489215425b63")
+	)
+	(pad "1" smd roundrect
+		(at 0 0)
+		(size 3.8 2)
+		(layers "F.Cu" "F.Mask")
+		(roundrect_rratio 0.15)
+		(thermal_bridge_angle 45)
+		(uuid "5e3d878c-8de1-4b66-9325-7507da13cdca")
+	)
+	(embedded_fonts no)
+)

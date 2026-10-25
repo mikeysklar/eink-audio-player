@@ -6,6 +6,129 @@
 	(paper "A3")
 	(title_block (title "eink-audio-player") (company "mikeysklar"))
 	(lib_symbols
+		(symbol "Connector:TestPoint"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.762)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Pin* Test*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector:Conn_01x16_Socket"
 				(pin_names
 					(offset 1.016)
@@ -3386,7 +3509,11 @@
 	(no_connect (at 55.88 142.24) (uuid "456a61ec-9efb-43c5-b075-6aca5e181dff"))
 	(no_connect (at 55.88 144.78) (uuid "1447d31d-e14b-4c3c-8ff3-67af3e450188"))
 	(no_connect (at 55.88 147.32) (uuid "21a97045-8021-42b1-8b3b-0ebdeb7357b5"))
-	(no_connect (at 55.88 149.86) (uuid "b5811069-3b72-4cb0-a9c0-0df3d8625212"))
+	(wire (pts (xy 55.88 149.86) (xy 50.8 149.86))
+		(stroke (width 0) (type default)) (uuid "271cd4c3-9ead-4b25-a6d6-7627192ecab7"))
+	(label "D5_MCLK_JMP" (at 50.8 149.86 180) (fields_autoplaced yes)
+		(effects (font (size 1.27 1.27)) (justify right bottom))
+		(uuid "16bcb4d0-9736-4605-a480-18fc374d1b47"))
 	(wire (pts (xy 55.88 152.4) (xy 50.8 152.4))
 		(stroke (width 0) (type default)) (uuid "22e2f4b7-27f0-46ba-a14e-741da08e1978"))
 	(label "SCL" (at 50.8 152.4 180) (fields_autoplaced yes)
@@ -3460,7 +3587,11 @@
 	(label "I2S_BCLK_R3" (at 121.92 81.28 180) (fields_autoplaced yes)
 		(effects (font (size 1.27 1.27)) (justify right bottom))
 		(uuid "925135d3-4b33-4ca0-9496-2679b8327e5c"))
-	(no_connect (at 127.0 83.82) (uuid "8e340099-2e1c-49d0-b0a8-939df2ec7b3e"))
+	(wire (pts (xy 127.0 83.82) (xy 121.92 83.82))
+		(stroke (width 0) (type default)) (uuid "450ef0f6-6ed2-404b-8295-619a10ec50b4"))
+	(label "MCLK" (at 121.92 83.82 180) (fields_autoplaced yes)
+		(effects (font (size 1.27 1.27)) (justify right bottom))
+		(uuid "945453e4-d6ed-456d-b372-5572c4b9d3fb"))
 	(no_connect (at 127.0 86.36) (uuid "ea3ed234-7a9c-4b5f-8b8b-41b7469e82c9"))
 	(no_connect (at 127.0 88.9) (uuid "8a979143-00ca-4543-b6ba-5dd74fe2c681"))
 	(symbol (lib_id "Connector:Conn_01x08_Socket") (at 132.08 134.62 0) (unit 1)
@@ -3893,8 +4024,62 @@
 	(text "I2S on A0 BCLK, A1 WSEL, A2 DIN (i2s-amp-shim pins). EYESPI on board.SPI." (exclude_from_sim no) (at 30.48 182.88 0)
 		(effects (font (size 1.27 1.27)) (justify left bottom))
 		(uuid "700b41b4-09a6-4be6-805d-6b58d0baaab7"))
-	(text "TLV RST (J10.5) open: 10K pull-up on the breakout. MCLK open: PLL from BCLK." (exclude_from_sim no) (at 30.48 187.96 0)
+	(text "TLV RST (J10.5) open: 10K pull-up on the breakout. MCLK on TP2, wired to D5 on TP1." (exclude_from_sim no) (at 30.48 187.96 0)
 		(effects (font (size 1.27 1.27)) (justify left bottom))
 		(uuid "5f616104-236b-4dca-9afc-814a461b1cb6"))
+	(symbol (lib_id "Connector:TestPoint") (at 110.49 167.64 0) (unit 1)
+		(exclude_from_sim no) (in_bom no) (on_board yes) (dnp no)
+		(uuid "30788f48-e7be-4728-b9b4-703cf90f04f3")
+		(property "Reference" "TP1" (at 110.49 160.782 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "JUMPER" (at 110.49 162.56 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "eink-audio-player:JumperPad_3.8x2.0mm" (at 110.49 167.64 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" "~" (at 110.49 167.64 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "1" (uuid "a73557aa-f564-4d0c-9ac5-667a12061243"))
+		(instances (project "eink-audio-player"
+			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "TP1") (unit 1))))
+	)
+	(wire (pts (xy 110.49 167.64) (xy 102.87 167.64))
+		(stroke (width 0) (type default)) (uuid "d7c9c422-aa99-4f68-bdc3-43297ffadcbb"))
+	(label "D5_MCLK_JMP" (at 102.87 167.64 180) (fields_autoplaced yes)
+		(effects (font (size 1.27 1.27)) (justify right bottom))
+		(uuid "ea96bc87-bb6b-4722-9e2d-b13a7ec45e26"))
+	(symbol (lib_id "Connector:TestPoint") (at 156.21 167.64 0) (unit 1)
+		(exclude_from_sim no) (in_bom no) (on_board yes) (dnp no)
+		(uuid "22448aa3-85f6-4290-b179-47e210d0f70d")
+		(property "Reference" "TP2" (at 156.21 160.782 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "JUMPER" (at 156.21 162.56 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "eink-audio-player:JumperPad_3.8x2.0mm" (at 156.21 167.64 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" "~" (at 156.21 167.64 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "1" (uuid "c289c31e-9553-4bdb-b730-48389af4d698"))
+		(instances (project "eink-audio-player"
+			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "TP2") (unit 1))))
+	)
+	(wire (pts (xy 156.21 167.64) (xy 148.59 167.64))
+		(stroke (width 0) (type default)) (uuid "ae3f3587-392f-4245-a762-234f6a0d422b"))
+	(label "MCLK" (at 148.59 167.64 180) (fields_autoplaced yes)
+		(effects (font (size 1.27 1.27)) (justify right bottom))
+		(uuid "384c993f-2783-4720-9087-1914f8cdb399"))
+	(text "JUMPER WIRE: solder TP1 (Feather D5) to TP2 (TLV MCLK)" (exclude_from_sim no) (at 100.33 158.75 0)
+		(effects (font (size 1.524 1.524) bold) (justify left bottom))
+		(uuid "7fc52ee6-5351-4d06-b555-bb2450e4c282"))
+	(text "MCLK: D5 drives a 15 MHz PWM clock (pwmio, configure_clocks mclk_freq=15_000_000). With BCLK only, the TLV PLL does not lock and audio sounds muffled." (exclude_from_sim no) (at 30.48 193.04 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "06685e6a-16a0-4158-829a-c4f90977a4c0"))
 	(sheet_instances (path "/" (page "1")))
 )
