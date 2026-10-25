@@ -2,7 +2,7 @@
 
 A desktop audio player with a quad-colour e-ink screen, four keys and a thumb wheel. It will let you pick a letter to jump straight to an artist, album or song, so you never scroll through a long list.
 
-It will also play FLAC files at up to 24-bit/96 kHz, higher quality than a CD. Some people get frisson, a chill or goose bumps on the neck, from music they love, and that slightly better fidelity can make it easier to feel.
+It plays FLAC files. 16-bit/44.1 kHz works now; the goal is up to 24-bit/96 kHz, higher quality than a CD. Some people get frisson, a chill or goose bumps on the neck, from music they love, and that slightly better fidelity can make it easier to feel.
 
 Site: https://mikeysklar.github.io/eink-audio-player/
 
@@ -16,8 +16,8 @@ Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.i
 
 ## How it works
 
-- An Adafruit Feather RP2350 reads MP3 files (FLAC planned) from a microSD card on the display's EYESPI breakout, over SPI.
-- A TLV320DAC3100 DAC takes I2S from the Feather on A0, A1 and A2, and drives the headphone jack.
+- An Adafruit Feather RP2350 reads FLAC files from a microSD card on the display's EYESPI breakout, over SPI.
+- A TLV320DAC3100 DAC takes I2S from the Feather on A0, A1 and A2, and drives the headphone jack. A jumper wire from TP1 to TP2 feeds it a 15 MHz MCLK from D5; without it the audio sounds muffled.
 - The 2.13 inch quad-colour e-ink screen shows the artist and track.
 - A NeoKey 1x4 on STEMMA QT gives next, previous, play and artist.
 - An ANO rotary encoder on the stand gives the thumb a wheel and five buttons. It chains off the NeoKey over STEMMA QT.
@@ -25,7 +25,7 @@ Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.i
 
 ## The board
 
-The four boards plug into one single-sided milled PCB. It has top copper only, 0.4 mm traces, a GND fill with 0.1 mm clearance, and 0805 0R jumpers where traces cross. There are no vias.
+The four boards plug into one single-sided milled PCB. It has top copper only, 0.4 mm traces, a GND fill with 0.1 mm clearance, and 0805 0R jumpers where traces cross. There are no vias. Two large pads, TP1 and TP2, take a hand-soldered wire from Feather D5 to the TLV320's MCLK.
 
 ![schematic](docs/media/kicad/schematic.png)
 
@@ -41,6 +41,10 @@ The four boards plug into one single-sided milled PCB. It has top copper only, 0
 - `kicad/3d/adafruit-hq/` rebuilds the board models: Adafruit's CAD parts on Adafruit's own boards, with mask, silkscreen and pads.
 - `kicad/fab/` has the Gerber and drill files for milling or a board house.
 - `kicad/scripts/` has the scripts that generate the board and check the layout plan.
+
+## Firmware
+
+`firmware/code.py` is a CircuitPython FLAC player: it plays a folder from the microSD card to the headphone jack. See [firmware/README.md](firmware/README.md) for the jumper, pins, libraries and settings.
 
 ## The stand
 
