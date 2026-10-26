@@ -1,6 +1,6 @@
 # Blender renders
 
-Turntable and break-apart animations of the eink-audio-player: the printed mini arcade stand
+Turntable and break-apart animations of Frisson: the printed mini arcade stand
 with every board in place. Output goes to `docs/media/blender/`.
 
 | File | What |

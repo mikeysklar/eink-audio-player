@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Mikey Sklar
 # SPDX-License-Identifier: MIT-0
-"""FLAC player for the eink-audio-player board.
+"""FLAC player for the Frisson board.
 
 Plays every .flac file in ALBUM on the microSD card, in name order, through
 the TLV320DAC3100 to the headphone jack.

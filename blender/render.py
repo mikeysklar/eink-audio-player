@@ -1,4 +1,4 @@
-"""Blender scenes for the eink-audio-player: printed stand plus all the boards.
+"""Blender scenes for Frisson: printed stand plus all the boards.
 
     blender -b --factory-startup --python render.py -- turntable   # turntable.blend
     blender -b --factory-startup --python render.py -- explode     # explode.blend

@@ -1,4 +1,4 @@
-# Renders parts-sheet and assembly for the eink-audio-player stand.
+# Renders parts-sheet and assembly for the Frisson stand.
 # Run: Blender -b --factory-startup --python render.py -- <mode> <out.png>
 import bpy, sys, os, json
 from mathutils import Matrix, Vector

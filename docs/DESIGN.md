@@ -1,4 +1,4 @@
-# eink-audio-player design notes
+# Frisson design notes
 
 Short notes on how the board and the stand are built. The numbers come from the build scripts.
 

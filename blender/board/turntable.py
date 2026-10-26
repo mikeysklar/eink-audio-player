@@ -1,4 +1,4 @@
-"""8 s turntable of the eink-audio-player board with an exploded view.
+"""8 s turntable of the Frisson board with an exploded view.
 
     blender -b --factory-startup --python turntable.py                # Cycles (Metal GPU) 1080x1080 MP4
     blender -b --factory-startup --python turntable.py -- --preview   # EEVEE 540x540 MP4

@@ -1,6 +1,6 @@
-# eink-audio-player hardware
+# Frisson hardware
 
-Parts, pin map and stand hardware for the eink-audio-player. Counts come from the
+Parts, pin map and stand hardware for Frisson. Counts come from the
 landing pad PCB (`landing-pad.kicad_pcb`), the netlist as routed on the board, and the
 stand scripts in `arcade/`.
 

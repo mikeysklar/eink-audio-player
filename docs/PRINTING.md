@@ -1,4 +1,4 @@
-# Printing the eink-audio-player stand
+# Printing the Frisson stand
 
 Five STL files make the stand, one printed piece each. Each file is one watertight solid
 (checked in FreeCAD). The sizes below are for each part in the orientation it should

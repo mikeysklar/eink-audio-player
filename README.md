@@ -1,4 +1,4 @@
-# eink-audio-player
+# Frisson
 
 A desktop audio player with a quad-colour e-ink screen, four keys and a thumb wheel. It will let you pick a letter to jump straight to an artist, album or song, so you never scroll through a long list.
 

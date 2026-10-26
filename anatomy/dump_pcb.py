@@ -1,4 +1,4 @@
-# Dump the E-ink Audio Player board copper, pads, footprints and outline to JSON in the STEP
+# Dump the Frisson board copper, pads, footprints and outline to JSON in the STEP
 # frame (mm, origin board bottom-left, y up): x = kx - 99.95, y = 154.21 - ky.
 import json, sys, pcbnew
 OX, OY = 99.95, 154.21

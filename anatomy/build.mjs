@@ -1,4 +1,4 @@
-// Anatomy figure of the E-ink Audio Player: a milled single-sided board that carries a
+// Anatomy figure of Frisson: a milled single-sided board that carries a
 // Feather RP2350, a TLV320DAC3100 DAC and an EYESPI breakout on sockets, with a
 // LiPo, a 2.13in e-ink and a NeoKey 1x4 on its back.
 //
@@ -510,7 +510,7 @@ const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "The E-ink Audio Player, a palm-sized RP2350 music player. A 61 by 76 mm milled single-sided board carries a Feather RP2350, a TLV320DAC3100 DAC with a headphone jack and an EYESPI breakout on SMT sockets; a flex folds over the top edge to a 2.13 inch e-ink on the back, beside a 2000 mAh LiPo and a NeoKey 1x4, with an ANO rotary encoder for the thumb past the end of the keys. It sits as on its stand, seen from behind: the board at 65 degrees, the keys in front at 10 degrees and the ANO past their right end. Taken apart, the boards lift off their sockets, the e-ink swings open on its flex, the LiPo drops, and the keys and the ANO slide out together to the side, while each function lights up in turn.",
+    "Frisson, a palm-sized RP2350 music player. A 61 by 76 mm milled single-sided board carries a Feather RP2350, a TLV320DAC3100 DAC with a headphone jack and an EYESPI breakout on SMT sockets; a flex folds over the top edge to a 2.13 inch e-ink on the back, beside a 2000 mAh LiPo and a NeoKey 1x4, with an ANO rotary encoder for the thumb past the end of the keys. It sits as on its stand, seen from behind: the board at 65 degrees, the keys in front at 10 degrees and the ANO past their right end. Taken apart, the boards lift off their sockets, the e-ink swings open on its flex, the LiPo drops, and the keys and the ANO slide out together to the side, while each function lights up in turn.",
   body: [
     `<g transform="${POSE}">`,
     `<g data-part="k-back"></g>`,
@@ -548,7 +548,7 @@ const CSS = `<style>
 // ---- tour ----
 // Each step: what lights up, the readout, and the pose (apart, display angle).
 const STEPS = [
-  { read: "RP2350 music player · milled E-ink Audio Player board, 61 × 76 mm", apart: 0, d: 1, g: [], nets: [] },
+  { read: "RP2350 music player · milled Frisson board, 61 × 76 mm", apart: 0, d: 1, g: [], nets: [] },
   { read: "Board · single-sided F.Cu, 0.4 mm traces, GND fill, R1–R4 0R hops", apart: 1, d: 1, g: ["pad", "jumper"], nets: [] },
   { read: "Power · LiPo 2000 mAh → Feather JST · SW1 grounds EN = off · 3V3 rail", apart: 1, d: 1, g: ["battery", "jstph", "usbc", "sw1"], nets: ["3V3", "EN"] },
   { read: "Brain · Feather RP2350 on J1 + J2, 14 pins used", apart: 1, d: 1, g: ["feather", "rp2350", "j-feather"], nets: [] },
@@ -759,7 +759,7 @@ draw();
 
 const body = CSS + k.plateHtml({
   fig: "Fig 1",
-  title: "E-ink Audio Player",
+  title: "Frisson",
   hint: hero ? "" : "Hover to take apart · ← → step through",
   readout: STEPS[0].read,
   keys: [
@@ -768,10 +768,10 @@ const body = CSS + k.plateHtml({
   ],
   caption:
     "A 61.06 × 76.16 mm board milled from single-sided copper: 0.4 mm traces, a GND fill, and four 0805 0R jumpers where a trace has to hop another. Adafruit boards plug into SMT sockets; the EYESPI flex wraps the top edge to the e-ink. The LiPo and STEMMA QT cables are not drawn.",
-  body: `<div class="iso-stage" tabindex="0" role="group" aria-roledescription="interactive figure" aria-label="E-ink audio player: arrow keys step through the functions, hover takes it apart">${svg}</div>`,
+  body: `<div class="iso-stage" tabindex="0" role="group" aria-roledescription="interactive figure" aria-label="Frisson: arrow keys step through the functions, hover takes it apart">${svg}</div>`,
 });
 
 const name = `eink-audio-player${hero ? "-hero" : ""}${theme === "light" ? "-light" : ""}.html`;
 mkdirSync(OUT, { recursive: true });
-writeFileSync(join(OUT, name), k.pageHtml({ title: "E-ink Audio Player", theme, body, script: kitScript() + live }));
+writeFileSync(join(OUT, name), k.pageHtml({ title: "Frisson", theme, body, script: kitScript() + live }));
 console.log("wrote", name);

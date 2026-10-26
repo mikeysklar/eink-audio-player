@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Export the eink-audio-player board and each part to GLB for render.py.
+# Export the Frisson board and each part to GLB for render.py.
 # Same origin as case/build/board.step (board bbox bottom-left, Y up), so the
 # arcade layout.json matrices place them directly.
 #   ./export.sh [path/to/board.kicad_pcb]

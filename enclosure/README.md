@@ -1,4 +1,4 @@
-# eink-audio-player stand
+# Frisson stand
 
 The stand is a skeleton, not a box, in five printed parts. The red chassis is both side
 frames (cheeks), the two foot bars and the ANO mount in one piece. It holds the e-ink
