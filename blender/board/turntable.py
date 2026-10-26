@@ -28,7 +28,7 @@ HERE = Path(__file__).resolve().parent
 CAD = Path(os.environ.get("CAD_DIR", HERE / "cad"))
 OUT = Path(os.environ.get("OUT_DIR", HERE / "out"))
 OUT.mkdir(parents=True, exist_ok=True)
-BLEND = OUT / "eink-audio-player-turntable.blend"
+BLEND = OUT / "frisson-turntable.blend"
 OUTPUT = OUT / "board-turntable.mp4"
 ARGS = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 STILL = "--still" in ARGS
@@ -197,7 +197,7 @@ def build(mats):
         world = obj.matrix_world.copy()
         obj.parent = pivots["keycaps"]
         obj.matrix_world = world
-    print(f"[eink-audio-player] {len(keys)} key blocks")
+    print(f"[frisson] {len(keys)} key blocks")
 
     recolor(GLB_MESHES["DS1"], (0.56, 0.66, 0.56), mats["eink"])  # KiCad's grey-green -> paper
     recolor(GLB_MESHES["A5"], (0.79, 0.79, 0.75), mats["keycap"])
@@ -339,7 +339,7 @@ def render_still(scene, camera, frame, path):
     scene.frame_set(frame)
     scene.render.filepath = str(path)
     bpy.ops.render.render(write_still=True)
-    print(f"[eink-audio-player] wrote {path}")
+    print(f"[frisson] wrote {path}")
 
 
 def main():
@@ -385,7 +385,7 @@ def main():
         return max(r / half_frame * 1.22, h / half_frame * 1.22)
 
     near, far = fit(a_low, a_high), fit(e_low, e_high)
-    print(f"[eink-audio-player] assembled {(a_high - a_low) / MM} mm, exploded {(e_high - e_low) / MM} mm, "
+    print(f"[frisson] assembled {(a_high - a_low) / MM} mm, exploded {(e_high - e_low) / MM} mm, "
           f"camera {near / MM:.0f} -> {far / MM:.0f} mm")
     spin, camera = add_turntable(center, near, far)
     setup_output(scene)
@@ -424,7 +424,7 @@ def main():
     written = sorted(OUT.glob(OUTPUT.stem + "-*.mp4"), key=os.path.getmtime)
     if written:
         os.replace(written[-1], OUTPUT)
-    print(f"[eink-audio-player] wrote {OUTPUT} in {time.monotonic() - started:.0f} s")
+    print(f"[frisson] wrote {OUTPUT} in {time.monotonic() - started:.0f} s")
 
 
 main()

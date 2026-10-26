@@ -2276,7 +2276,7 @@
 			)
 		)
 	)
-	(footprint "eink-audio-player:JumperPad_3.8x2.0mm"
+	(footprint "frisson:JumperPad_3.8x2.0mm"
 		(layer "F.Cu")
 		(uuid "519b3f17-9c76-49a0-b45c-1812b69fbeb2")
 		(at 120 89.91)
@@ -2349,7 +2349,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "eink-audio-player:SW_SPDT_MSK-12C03"
+	(footprint "frisson:SW_SPDT_MSK-12C03"
 		(layer "F.Cu")
 		(uuid "5ff037d1-0e2d-4e75-ac06-e20311191445")
 		(at 97.78 79.59 180)
@@ -4118,7 +4118,7 @@
 			)
 		)
 	)
-	(footprint "eink-audio-player:JumperPad_3.8x2.0mm"
+	(footprint "frisson:JumperPad_3.8x2.0mm"
 		(layer "F.Cu")
 		(uuid "83238751-db15-4d54-a2fc-ee10fedb3e5c")
 		(at 107.6 116.91)

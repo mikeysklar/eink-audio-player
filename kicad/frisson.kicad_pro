@@ -267,7 +267,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "eink-audio-player.kicad_pro",
+    "filename": "frisson.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -316,8 +316,8 @@
     "legacy_lib_list": [],
     "top_level_sheets": [
       {
-        "filename": "eink-audio-player.kicad_sch",
-        "name": "eink-audio-player",
+        "filename": "frisson.kicad_sch",
+        "name": "frisson",
         "uuid": "00000000-0000-0000-0000-000000000000"
       }
     ]

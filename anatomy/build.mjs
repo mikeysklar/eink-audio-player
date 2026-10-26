@@ -2,11 +2,11 @@
 // Feather RP2350, a TLV320DAC3100 DAC and an EYESPI breakout on sockets, with a
 // LiPo, a 2.13in e-ink and a NeoKey 1x4 on its back.
 //
-//   node build.mjs --light          -> eink-audio-player-light.html
-//   node build.mjs --light --hero   -> eink-audio-player-hero-light.html (no hint, for record.mjs)
+//   node build.mjs --light          -> frisson-light.html
+//   node build.mjs --light --hero   -> frisson-hero-light.html (no hint, for record.mjs)
 //
 // Every number is in mm and comes from the design: pcb.json (dump_pcb.py over
-// eink-audio-player.kicad_pcb: tracks, pads, zone fills, footprints) and solids.json
+// frisson.kicad_pcb: tracks, pads, zone fills, footprints) and solids.json
 // (solids.py over case/build/board.step: every solid's global bounding box). Frame:
 // STEP frame, x east, y north (board bottom-left at 0,0), z up, board top at 1.51.
 //
@@ -771,7 +771,7 @@ const body = CSS + k.plateHtml({
   body: `<div class="iso-stage" tabindex="0" role="group" aria-roledescription="interactive figure" aria-label="Frisson: arrow keys step through the functions, hover takes it apart">${svg}</div>`,
 });
 
-const name = `eink-audio-player${hero ? "-hero" : ""}${theme === "light" ? "-light" : ""}.html`;
+const name = `frisson${hero ? "-hero" : ""}${theme === "light" ? "-light" : ""}.html`;
 mkdirSync(OUT, { recursive: true });
 writeFileSync(join(OUT, name), k.pageHtml({ title: "Frisson", theme, body, script: kitScript() + live }));
 console.log("wrote", name);

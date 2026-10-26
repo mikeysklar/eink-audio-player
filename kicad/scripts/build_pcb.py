@@ -31,7 +31,7 @@ import os
 import pcbnew
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "eink-audio-player.kicad_pcb")
+OUT = os.path.join(HERE, "frisson.kicad_pcb")
 FPLIB = "/Applications/KiCad/KiCad.app/Contents/SharedSupport/footprints"
 
 # Board dimensions first, everything else derives from them.
@@ -212,7 +212,7 @@ tlv.socket("J10", "TLV MICBIAS..MIC", 8, (6.985, 22.86), (9.525, 22.86))
 # Power switch: MSK-12C03 side-actuated slide (as on grippy). Rot 90 points
 # the actuator (local +y) out of the right edge; the body front (local y=2.05)
 # sits on the edge so a printed slider in the case can grab it.
-sw = pcbnew.FootprintLoad(os.path.join(HERE, "eink-audio-player.pretty"), "SW_SPDT_MSK-12C03")
+sw = pcbnew.FootprintLoad(os.path.join(HERE, "frisson.pretty"), "SW_SPDT_MSK-12C03")
 sw.SetReference("SW1")
 sw.SetValue("Power (MSK-12C03)")
 board.Add(sw)
@@ -372,7 +372,7 @@ import plan  # noqa: E402
 LIB_OF = {"J1": "Connector_PinSocket_2.54mm", "J2": "Connector_PinSocket_2.54mm",
           "J9": "Connector_PinSocket_2.54mm", "J10": "Connector_PinSocket_2.54mm",
           "J4": "Connector_PinSocket_2.54mm", "J5": "Connector_PinSocket_2.54mm",
-          "SW1": "eink-audio-player"}
+          "SW1": "frisson"}
 PIN_NAME = {"SW1": {"1": "A", "2": "B", "3": "C"}}
 # Render-only parts: no symbol, out of BOM, position files and parity.
 for fp in board.GetFootprints():
@@ -536,7 +536,7 @@ pcbnew.SaveBoard(OUT, board)
 print("wrote", OUT, f"{len(tracks)} tracks, {len(jumpers)} jumpers")
 json.dump(sch_nets, open(os.path.join(HERE, "subnets.json"), "w"), indent=1, sort_keys=True)
 
-pro = os.path.join(HERE, "eink-audio-player.kicad_pro")
+pro = os.path.join(HERE, "frisson.kicad_pro")
 d = json.load(open(pro))
 rules = d["board"]["design_settings"]["rules"]
 rules.update({"min_clearance": 0.1, "min_track_width": 0.4,
@@ -545,7 +545,7 @@ for nc in d["net_settings"]["classes"]:
     if nc["name"] == "Default":
         nc.update({"clearance": 0.4, "track_width": 0.4})
 json.dump(d, open(pro, "w"), indent=2)
-open(os.path.join(HERE, "eink-audio-player.kicad_dru"), "w").write("""(version 1)
+open(os.path.join(HERE, "frisson.kicad_dru"), "w").write("""(version 1)
 # An 0805's pads are 0.8 mm apart, so the 0.4 track it hops keeps 0.2.
 (rule "0805 jumpers"
 \t(condition "A.memberOfFootprint('R*') || B.memberOfFootprint('R*')")

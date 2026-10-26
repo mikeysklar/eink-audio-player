@@ -9,7 +9,7 @@
   },
   "GeneralSpecs": {
     "ProjectId": {
-      "Name": "eink-audio-player",
+      "Name": "frisson",
       "GUID": "65696e6b-2d61-4756-9469-6f2d706c6179",
       "Revision": "rev?"
     },
@@ -34,47 +34,47 @@
   ],
   "FilesAttributes": [
     {
-      "Path": "eink-audio-player-F_Cu.gtl",
+      "Path": "frisson-F_Cu.gtl",
       "FileFunction": "Copper,L1,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "eink-audio-player-B_Cu.gbl",
+      "Path": "frisson-B_Cu.gbl",
       "FileFunction": "Copper,L2,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "eink-audio-player-F_Paste.gtp",
+      "Path": "frisson-F_Paste.gtp",
       "FileFunction": "SolderPaste,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "eink-audio-player-B_Paste.gbp",
+      "Path": "frisson-B_Paste.gbp",
       "FileFunction": "SolderPaste,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "eink-audio-player-F_Silkscreen.gto",
+      "Path": "frisson-F_Silkscreen.gto",
       "FileFunction": "Legend,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "eink-audio-player-B_Silkscreen.gbo",
+      "Path": "frisson-B_Silkscreen.gbo",
       "FileFunction": "Legend,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "eink-audio-player-F_Mask.gts",
+      "Path": "frisson-F_Mask.gts",
       "FileFunction": "SolderMask,Top",
       "FilePolarity": "Negative"
     },
     {
-      "Path": "eink-audio-player-B_Mask.gbs",
+      "Path": "frisson-B_Mask.gbs",
       "FileFunction": "SolderMask,Bot",
       "FilePolarity": "Negative"
     },
     {
-      "Path": "eink-audio-player-Edge_Cuts.gm1",
+      "Path": "frisson-Edge_Cuts.gm1",
       "FileFunction": "Profile",
       "FilePolarity": "Positive"
     }

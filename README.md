@@ -10,7 +10,7 @@ Docs: [Hardware](docs/HARDWARE.md) · [Design](docs/DESIGN.md) · [Printing](doc
 
 ![break apart](docs/media/blender/explode.gif)
 
-![anatomy](docs/media/anatomy/eink-audio-player.gif)
+![anatomy](docs/media/anatomy/frisson.gif)
 
 Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.io/eink-audio-player/anatomy.html).
 
@@ -60,7 +60,7 @@ A minimal "mini arcade" skeleton. The screen tilts back 65 degrees. The keys sit
 
 ![parts](docs/media/enclosure/parts-sheet.png)
 
-- `enclosure/` has the FreeCAD scripts, STEP and STL files, and `eink-audio-player.FCStd`.
+- `enclosure/` has the FreeCAD scripts, STEP and STL files, and `frisson.FCStd`.
 - To rebuild the stand, run `freecadcmd enclosure/assemble_arcade.py`.
 
 ## Parts

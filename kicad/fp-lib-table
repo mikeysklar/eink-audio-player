@@ -1,4 +1,4 @@
 (fp_lib_table
   (version 7)
-  (lib (name "eink-audio-player")(type "KiCad")(uri "${KIPRJMOD}/eink-audio-player.pretty")(options "")(descr "Board-local footprints"))
+  (lib (name "frisson")(type "KiCad")(uri "${KIPRJMOD}/frisson.pretty")(options "")(descr "Board-local footprints"))
 )

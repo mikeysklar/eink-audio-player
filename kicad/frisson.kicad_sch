@@ -4,7 +4,7 @@
 	(generator_version "8.0")
 	(uuid "68a20767-e11b-5af4-a54e-061cf37f3ec1")
 	(paper "A3")
-	(title_block (title "eink-audio-player") (company "mikeysklar"))
+	(title_block (title "frisson") (company "mikeysklar"))
 	(lib_symbols
 		(symbol "Connector:TestPoint"
 			(pin_numbers
@@ -3395,7 +3395,7 @@
 		(pin "14" (uuid "b135da68-7922-4e2f-b873-bcea1303c3f7"))
 		(pin "15" (uuid "21627395-20d2-43e2-a282-0ee5c63ed727"))
 		(pin "16" (uuid "856b905d-17c4-47ee-bcbd-15464a4bbf6f"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "J1") (unit 1))))
 	)
 	(no_connect (at 55.88 58.42) (uuid "42c21245-4ecf-4550-af74-da30dcaa34ce"))
@@ -3493,7 +3493,7 @@
 		(pin "10" (uuid "00d4ad6b-07c2-436c-a077-f5d40de4b081"))
 		(pin "11" (uuid "14ea01f7-b321-49c8-8af6-30a208e342d1"))
 		(pin "12" (uuid "6f695c32-534a-48b4-b856-ee13603b60e0"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "J2") (unit 1))))
 	)
 	(no_connect (at 55.88 127.0) (uuid "474c28e7-03bb-49df-80b3-e7397261328b"))
@@ -3549,7 +3549,7 @@
 		(pin "8" (uuid "78539a6d-d1fc-46ff-b29e-33c7213e1cd3"))
 		(pin "9" (uuid "27951660-2761-47b0-bb17-0528666d23ea"))
 		(pin "10" (uuid "556407f1-16cb-469c-a7f6-9c3ee16ea56a"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "J9") (unit 1))))
 	)
 	(wire (pts (xy 127.0 66.04) (xy 121.92 66.04))
@@ -3617,7 +3617,7 @@
 		(pin "6" (uuid "9b627b2c-cb33-4e16-8b18-8b32b45c9018"))
 		(pin "7" (uuid "b2337436-2ede-4e3b-a2dc-0fd28022b5a0"))
 		(pin "8" (uuid "e2a18b31-e160-47fc-b909-4c7cbcbb9b3b"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "J10") (unit 1))))
 	)
 	(no_connect (at 127.0 127.0) (uuid "79da9c03-b320-4ce7-861b-91ddd40475e3"))
@@ -3652,7 +3652,7 @@
 		(pin "7" (uuid "232e8f72-e9dd-40f3-9214-239e7264a01f"))
 		(pin "8" (uuid "e483a818-5de0-43b1-8024-828d98b7bbf2"))
 		(pin "9" (uuid "316fb2e9-199e-4d2e-855a-11678273be0c"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "J4") (unit 1))))
 	)
 	(wire (pts (xy 198.12 66.04) (xy 193.04 66.04))
@@ -3720,7 +3720,7 @@
 		(pin "7" (uuid "5826ada2-76e5-4f33-a412-986acddfa019"))
 		(pin "8" (uuid "0b80a90b-32a2-456f-84b1-80d0e77dc157"))
 		(pin "9" (uuid "8b18a8f8-44c1-4203-a397-6621e278416c"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "J5") (unit 1))))
 	)
 	(wire (pts (xy 198.12 96.52) (xy 193.04 96.52))
@@ -3749,7 +3749,7 @@
 		(property "Value" "Power (MSK-12C03)" (at 205.73999999999998 147.32 0)
 			(effects (font (size 1.27 1.27)))
 		)
-		(property "Footprint" "eink-audio-player:SW_SPDT_MSK-12C03" (at 203.2 139.7 0)
+		(property "Footprint" "frisson:SW_SPDT_MSK-12C03" (at 203.2 139.7 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
 		(property "Datasheet" "~" (at 203.2 139.7 0)
@@ -3758,7 +3758,7 @@
 		(pin "1" (uuid "609e5fee-d4f2-4c08-a33c-56170f9a0f97"))
 		(pin "2" (uuid "2084051c-3961-4d07-abfe-bdf8259b5b58"))
 		(pin "3" (uuid "cfa38a03-98de-496e-b8fc-0359792070bf"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "SW1") (unit 1))))
 	)
 	(no_connect (at 208.28 137.16) (uuid "a42ae285-af69-41e7-ae6f-e55bf3801b98"))
@@ -3789,7 +3789,7 @@
 		)
 		(pin "1" (uuid "e8eb06d0-f502-4494-953f-5f09c65f196e"))
 		(pin "2" (uuid "ae3d1258-76f5-4faf-b8f6-591fef880902"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "R1") (unit 1))))
 	)
 	(wire (pts (xy 241.3 72.39) (xy 241.3 69.85))
@@ -3819,7 +3819,7 @@
 		)
 		(pin "1" (uuid "800882ce-3647-4e04-85e4-f73a807f219e"))
 		(pin "2" (uuid "1b1a1d25-4425-4990-b759-1cf801cccd9a"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "R2") (unit 1))))
 	)
 	(wire (pts (xy 256.54 72.39) (xy 256.54 69.85))
@@ -3849,7 +3849,7 @@
 		)
 		(pin "1" (uuid "a08477d7-2590-44c7-bc72-1803eefc4ea3"))
 		(pin "2" (uuid "852f8f10-cb37-4401-a597-9cde4d0a52ff"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "R3") (unit 1))))
 	)
 	(wire (pts (xy 271.78000000000003 72.39) (xy 271.78000000000003 69.85))
@@ -3879,7 +3879,7 @@
 		)
 		(pin "1" (uuid "82015960-c2c9-4800-a0fd-16af82d9d773"))
 		(pin "2" (uuid "9d4e70b1-0737-4159-936d-33299fd13609"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "R4") (unit 1))))
 	)
 	(wire (pts (xy 287.02 72.39) (xy 287.02 69.85))
@@ -3907,7 +3907,7 @@
 		(property "Datasheet" "~" (at 241.3 134.62 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "H1") (unit 1))))
 	)
 	(symbol (lib_id "Mechanical:MountingHole") (at 256.54 134.62 0) (unit 1)
@@ -3925,7 +3925,7 @@
 		(property "Datasheet" "~" (at 256.54 134.62 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "H2") (unit 1))))
 	)
 	(symbol (lib_id "Mechanical:MountingHole") (at 271.78000000000003 134.62 0) (unit 1)
@@ -3943,7 +3943,7 @@
 		(property "Datasheet" "~" (at 271.78000000000003 134.62 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "H3") (unit 1))))
 	)
 	(symbol (lib_id "Mechanical:MountingHole") (at 287.02 134.62 0) (unit 1)
@@ -3961,7 +3961,7 @@
 		(property "Datasheet" "~" (at 287.02 134.62 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "H4") (unit 1))))
 	)
 	(symbol (lib_id "Mechanical:MountingHole") (at 302.26 134.62 0) (unit 1)
@@ -3979,7 +3979,7 @@
 		(property "Datasheet" "~" (at 302.26 134.62 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "H5") (unit 1))))
 	)
 	(symbol (lib_id "Mechanical:MountingHole") (at 317.5 134.62 0) (unit 1)
@@ -3997,7 +3997,7 @@
 		(property "Datasheet" "~" (at 317.5 134.62 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "H6") (unit 1))))
 	)
 	(symbol (lib_id "Mechanical:MountingHole") (at 332.74 134.62 0) (unit 1)
@@ -4015,7 +4015,7 @@
 		(property "Datasheet" "~" (at 332.74 134.62 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "H7") (unit 1))))
 	)
 	(text "Single-sided F.Cu, no vias, GND fill. R1-R4 are 0R jumpers over crossing traces." (exclude_from_sim no) (at 30.48 177.8 0)
@@ -4036,14 +4036,14 @@
 		(property "Value" "JUMPER" (at 110.49 162.56 0)
 			(effects (font (size 1.27 1.27)))
 		)
-		(property "Footprint" "eink-audio-player:JumperPad_3.8x2.0mm" (at 110.49 167.64 0)
+		(property "Footprint" "frisson:JumperPad_3.8x2.0mm" (at 110.49 167.64 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
 		(property "Datasheet" "~" (at 110.49 167.64 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
 		(pin "1" (uuid "a73557aa-f564-4d0c-9ac5-667a12061243"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "TP1") (unit 1))))
 	)
 	(wire (pts (xy 110.49 167.64) (xy 102.87 167.64))
@@ -4060,14 +4060,14 @@
 		(property "Value" "JUMPER" (at 156.21 162.56 0)
 			(effects (font (size 1.27 1.27)))
 		)
-		(property "Footprint" "eink-audio-player:JumperPad_3.8x2.0mm" (at 156.21 167.64 0)
+		(property "Footprint" "frisson:JumperPad_3.8x2.0mm" (at 156.21 167.64 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
 		(property "Datasheet" "~" (at 156.21 167.64 0)
 			(effects (font (size 1.27 1.27)) (hide yes))
 		)
 		(pin "1" (uuid "c289c31e-9553-4bdb-b730-48389af4d698"))
-		(instances (project "eink-audio-player"
+		(instances (project "frisson"
 			(path "/68a20767-e11b-5af4-a54e-061cf37f3ec1" (reference "TP2") (unit 1))))
 	)
 	(wire (pts (xy 156.21 167.64) (xy 148.59 167.64))

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT-0
 # Writes its output next to itself (scripts/). Used to generate the schematic from subnets.json; copy the output into kicad/ to use it.
 """
-Write eink-audio-player.kicad_sch from subnets.json (written by build_pcb.py)
+Write frisson.kicad_sch from subnets.json (written by build_pcb.py)
 and netlist.py.
 
 Plain python3 is enough (no pcbnew). Symbols are copied verbatim from the
@@ -31,7 +31,7 @@ import netlist
 import plan
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(SCRIPT_DIR, "eink-audio-player.kicad_sch")
+OUT = os.path.join(SCRIPT_DIR, "frisson.kicad_sch")
 SYM_DIR = "/Applications/KiCad/KiCad.app/Contents/SharedSupport/symbols"
 NS = uuid.UUID("5e1c0a77-2b5d-4c1e-9a0b-6c7d8e9f0a10")
 ROOT_UUID = str(uuid.uuid5(NS, "root"))
@@ -77,7 +77,7 @@ def symbol(lib_id, ref, value, fp, x, y, pins, ref_dy=-27.94, val_dy=27.94):
     out += prop("Datasheet", "~", x, y, hide=True)
     for p in pins:
         out += f'\t\t(pin "{p}" (uuid "{u()}"))\n'
-    out += (f'\t\t(instances (project "eink-audio-player"\n'
+    out += (f'\t\t(instances (project "frisson"\n'
             f'\t\t\t(path "/{ROOT_UUID}" (reference "{ref}") (unit 1))))\n\t)\n')
     return out
 
@@ -159,7 +159,7 @@ def main():
 
     # SW1: SW_SPDT, A (1) at (+5.08, -2.54), B (2) at (-5.08, 0), C (3) at (+5.08, +2.54)
     sx, sy = 203.2, 139.7
-    body += symbol("Switch:SW_SPDT", "SW1", "Power (MSK-12C03)", "eink-audio-player:SW_SPDT_MSK-12C03",
+    body += symbol("Switch:SW_SPDT", "SW1", "Power (MSK-12C03)", "frisson:SW_SPDT_MSK-12C03",
                    sx, sy, ["1", "2", "3"], ref_dy=-7.62, val_dy=7.62)
     pin_stub("SW1", 1, sx + 5.08, sy - 2.54, +1)
     pin_stub("SW1", 2, sx - 5.08, sy, -1)
@@ -200,7 +200,7 @@ def main():
 
     sch = (f'(kicad_sch\n\t(version 20231120)\n\t(generator "eeschema")\n'
            f'\t(generator_version "8.0")\n\t(uuid "{ROOT_UUID}")\n\t(paper "A3")\n'
-           f'\t(title_block (title "eink-audio-player") (company "mikeysklar"))\n'
+           f'\t(title_block (title "frisson") (company "mikeysklar"))\n'
            f'\t(lib_symbols\n{libs}\t)\n'
            f'{body}'
            f'\t(sheet_instances (path "/" (page "1")))\n)\n')
