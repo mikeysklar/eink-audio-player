@@ -42,6 +42,10 @@ The four boards plug into one single-sided milled PCB. It has top copper only, 0
 - `kicad/fab/` has the Gerber and drill files for milling or a board house.
 - `kicad/scripts/` has the scripts that generate the board and check the layout plan.
 
+Without the landing pad, the same circuit on a breadboard takes 22 jumper wires:
+
+![breadboard wiring](docs/media/wiring/breadboard-wiring.png)
+
 ## Firmware
 
 `firmware/code.py` is a CircuitPython FLAC player: it plays a folder from the microSD card to the headphone jack. See [firmware/README.md](firmware/README.md) for the jumper, pins, libraries and settings.
