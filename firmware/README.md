@@ -18,14 +18,29 @@ D5 sends a 15 MHz clock to the TLV320's MCLK pin. The TLV320's PLL locks to it. 
 | TLV320 MCLK (15 MHz PWM, over the jumper) | D5 |
 | TLV320 control (I2C) | SCL, SDA |
 | microSD (on the EYESPI breakout) | SCK, MOSI, MISO, CS on D24 |
+| NeoKey 1x4 (0x30) and ANO (0x49) | STEMMA QT (SCL, SDA) |
 
 ## Setup
 
-1. Install the libraries: `circup install adafruit_flac adafruit_tlv320`
-2. Copy `code.py` to the CIRCUITPY drive.
+1. Install the libraries: `circup install adafruit_flac adafruit_tlv320 adafruit_seesaw`
+2. Copy `code.py` and `lib/chordkeys.py` to the CIRCUITPY drive (`chordkeys.py` goes in `lib/`).
 3. Set `ALBUM` at the top of `code.py` to a folder on your card, for example `"/Shpongle-Tales_Of_The_Inexpressible-2001"`.
 
 The card is read through the `VfsFat` object directly, so CIRCUITPY needs no `/sd` folder.
+
+## Controls
+
+The NeoKey 1x4 and the ANO encoder are read by `lib/chordkeys.py`, a port of the chord input from [Grippy](https://github.com/mikeysklar/grippy). The four keys are fingers 0 to 3 and the ANO centre button is the thumb. A chord is sent when its first key is released. The player still runs if the keys are not plugged in.
+
+| Input | Action |
+|---|---|
+| ANO wheel | Volume, 1 dB a step |
+| ANO left / right | Previous / next track |
+| ANO up / down | Pause / resume |
+| Thumb tap | Letter layer (Grippy's alpha chords) |
+| Thumb hold, 0.7 s | Back to the menu layer |
+
+Menu chords and letters are printed to the serial console for now. They will drive the screen's menus and the jump-to-artist letter search.
 
 ## Settings
 
@@ -33,7 +48,8 @@ The card is read through the `VfsFat` object directly, so CIRCUITPY needs no `/s
 |---|---|---|
 | `ALBUM` | a folder on the card | Folder to play |
 | `LEVEL` | 0.5 | Output level, 0.0 to 1.0 |
-| `DAC_DB` | -16 | TLV320 DAC volume in dB |
+| `DAC_DB` | -16 | TLV320 DAC volume in dB at start |
+| `DAC_DB_MIN` | -63 | Lowest volume the wheel reaches; the top is 0 dB |
 | `BUFFER_MS` | 100 | Length of each half of the output buffer |
 
 ## Performance

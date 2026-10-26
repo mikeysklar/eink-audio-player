@@ -11,8 +11,17 @@ Board (see kicad/):
     15 MHz PWM clock and the TLV's PLL locks to it. With the PLL on BCLK
     instead, the audio sounds muffled.
   - The microSD card sits on the EYESPI breakout: board.SPI, CS on D24.
+  - The NeoKey 1x4 (0x30) and the ANO (0x49) hang off STEMMA QT. lib/chordkeys.py
+    reads them as Grippy-style chords. The player runs without them.
 
-Libraries: adafruit_flac, adafruit_tlv320, adafruit_bus_device.
+Controls (ANO):
+  - wheel: volume, 1 dB a step
+  - left / right: previous / next track
+  - up / down: pause / resume
+Chords on the NeoKey and the ANO centre are printed for now, until the screen
+has menus to drive.
+
+Libraries: adafruit_flac, adafruit_tlv320, adafruit_seesaw, adafruit_bus_device.
 """
 
 from array import array
@@ -44,10 +53,12 @@ import storage  # noqa: E402
 
 import adafruit_flac  # noqa: E402
 import adafruit_tlv320  # noqa: E402
+import chordkeys  # noqa: E402
 
 ALBUM = "/Shpongle-Tales_Of_The_Inexpressible-2001"
 LEVEL = 0.5  # FLACPlayer output level, 0.0 to 1.0
-DAC_DB = -16  # TLV320 DAC volume
+DAC_DB = -16  # TLV320 DAC volume at start
+DAC_DB_MIN = -63  # wheel range; above 0 dB the DAC clips
 MCLK_HZ = 15_000_000
 
 mclk = pwmio.PWMOut(board.D5, frequency=MCLK_HZ, duty_cycle=32768)
@@ -66,8 +77,44 @@ dac = adafruit_tlv320.TLV320DAC3100(board.I2C())
 player = adafruit_flac.FLACPlayer(audio, buffer=out_buf, level=LEVEL)
 decoder = None
 rate = 0
+volume = DAC_DB
 
-for name in tracks:
+try:
+    keys = chordkeys.ChordKeys(board.I2C())
+except ValueError as e:  # NeoKey or ANO not plugged in
+    print("no keys:", e)
+    keys = None
+
+
+def handle_keys():
+    """Act on the keys. Returns -1 or 1 to skip a track, else 0."""
+    global volume
+    skip = 0
+    for kind, value in keys.poll():
+        if kind == "wheel":
+            volume = max(DAC_DB_MIN, min(0, volume + value))
+            dac.dac_volume = volume
+            print("volume", volume, "dB")
+        elif kind == "button":
+            if value == "left":
+                skip = -1
+            elif value == "right":
+                skip = 1
+            elif value == "up" and not player.paused:
+                player.pause()
+                print("paused")
+            elif value == "down" and player.paused:
+                player.resume()
+                print("resumed")
+        else:
+            print(kind, value)  # ("menu", combo), ("letter", ch), ("layer", n)
+    return skip
+
+
+index = 0
+while index < len(tracks):
+    name = tracks[index]
+    step = 1
     with vfs.open(ALBUM + "/" + name, "rb") as f:
         if decoder is None:
             decoder = adafruit_flac.FLACDecoder(f)
@@ -77,7 +124,7 @@ for name in tracks:
             rate = decoder.sample_rate
             dac.configure_clocks(sample_rate=rate, bit_depth=16, mclk_freq=MCLK_HZ)
             dac.headphone_output = True
-            dac.dac_volume = DAC_DB
+            dac.dac_volume = volume
         print(
             "%s  %d Hz %d-bit %d:%02d"
             % (name, rate, decoder.source_bits_per_sample, decoder.duration // 60, decoder.duration % 60)
@@ -104,4 +151,10 @@ for name in tracks:
                 )
                 last = t
                 busy = slowest = decoded = 0
+            if keys:
+                skip = handle_keys()
+                if skip:
+                    step = skip
+                    player.stop()
         print("  done, underruns", player.underruns)
+    index = max(0, index + step)
