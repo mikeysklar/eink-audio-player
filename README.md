@@ -4,7 +4,7 @@ A desktop audio player with a quad-colour e-ink screen, four keys and a thumb wh
 
 It plays FLAC files. 16-bit/44.1 kHz works now; the goal is up to 24-bit/96 kHz, higher quality than a CD. Some people get frisson, a chill or goose bumps on the neck, from music they love, and that slightly better fidelity can make it easier to feel.
 
-Site: https://mikeysklar.github.io/eink-audio-player/
+Site: https://mikeysklar.github.io/frisson/
 
 Docs: [Hardware](docs/HARDWARE.md) · [Design](docs/DESIGN.md) · [Printing](docs/PRINTING.md)
 
@@ -12,7 +12,7 @@ Docs: [Hardware](docs/HARDWARE.md) · [Design](docs/DESIGN.md) · [Printing](doc
 
 ![anatomy](docs/media/anatomy/frisson.gif)
 
-Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.io/eink-audio-player/anatomy.html).
+Parts are labelled in the [interactive anatomy page](https://mikeysklar.github.io/frisson/anatomy.html).
 
 ## How it works
 
