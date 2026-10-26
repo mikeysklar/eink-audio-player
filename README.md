@@ -56,8 +56,6 @@ A minimal "mini arcade" skeleton. The screen tilts back 65 degrees. The keys sit
 
 ![turntable](docs/media/blender/turntable.gif)
 
-![assembly](docs/media/enclosure/assembly.png)
-
 ![parts](docs/media/enclosure/parts-sheet.png)
 
 - `enclosure/` has the FreeCAD scripts, STEP and STL files, and `frisson.FCStd`.
