@@ -1,6 +1,6 @@
 # Firmware
 
-`code.py` is a FLAC player for the board. It plays every `.flac` file in one folder on the microSD card, in name order, through the TLV320DAC3100 to the headphone jack. Tested on CircuitPython 11.0.0-alpha.2 on the Feather RP2350.
+Frisson plays the `.flac` files on its microSD card through the TLV320DAC3100 to the headphone jack, with menus on the 2.13" e-ink screen. Tested on CircuitPython 11.0.0-alpha.2 on the Feather RP2350, at 300 MHz.
 
 ## Before you start: the MCLK jumper
 
@@ -18,52 +18,71 @@ D5 sends a 15 MHz clock to the TLV320's MCLK pin. The TLV320's PLL locks to it. 
 | TLV320 MCLK (15 MHz PWM, over the jumper) | D5 |
 | TLV320 control (I2C) | SCL, SDA |
 | microSD (on the EYESPI breakout) | SCK, MOSI, MISO, CS on D24 |
+| E-ink (Adafruit 6383, SSD1680) | SCK, MOSI, CS D25, DC RX, RST TX, BUSY A3 |
 | NeoKey 1x4 (0x30) and ANO (0x49) | STEMMA QT (SCL, SDA) |
 
 ## Setup
 
-1. Install the libraries: `circup install adafruit_flac adafruit_tlv320 adafruit_seesaw`
-2. Copy `code.py` and `lib/chordkeys.py` to the CIRCUITPY drive (`chordkeys.py` goes in `lib/`).
-3. Set `ALBUM` at the top of `code.py` to a folder on your card, for example `"/Shpongle-Tales_Of_The_Inexpressible-2001"`.
+1. Install the libraries: `circup install adafruit_tlv320 adafruit_seesaw`
+2. Copy `code.py`, `fonts/` and everything in `lib/` to the CIRCUITPY drive. `lib/adafruit_flac/` is a build of [Adafruit_CircuitPython_FLAC](https://github.com/adafruit/Adafruit_CircuitPython_FLAC) with `seek()` added, for rewind and fast-forward. Use it in place of the released library.
+3. Put your music on the card, one folder per album.
 
-The card is read through the `VfsFat` object directly, so CIRCUITPY needs no `/sd` folder.
+The first start reads every file's tags into `/FRISSON.IDX` on the card. Delete it after changing the music.
+
+## Files
+
+| File | What it does |
+|---|---|
+| `code.py` | Sets 300 MHz and reserves the audio buffers in SRAM, then imports the player |
+| `lib/audiobuf.py` | The I2S output and its buffer |
+| `lib/frisson.py` | The player: SD card, DAC clocks, playback, the main loop |
+| `lib/library.py` | Reads FLAC tags and keeps the index |
+| `lib/menus.py` | What every key does, and what the screen shows |
+| `lib/chordkeys.py` | NeoKey and ANO input, with chords from [Grippy](https://github.com/mikeysklar/grippy) |
+| `lib/fastscreen.py` | The e-ink driver, with fast partial updates |
+| `lib/screen.py` | The older 4-gray displayio driver (5.6 s a refresh) |
+| `tools/draw_menus.py` | Draws the menus as PNGs on a computer |
 
 ## Controls
 
-The NeoKey 1x4 and the ANO encoder are read by `lib/chordkeys.py`, a port of the chord input from [Grippy](https://github.com/mikeysklar/grippy). The four keys are fingers 0 to 3 and the ANO centre button is the thumb. A chord is sent when its first key is released. The player still runs if the keys are not plugged in.
+Browse (the default):
 
 | Input | Action |
 |---|---|
-| ANO wheel | Volume, 1 dB a step |
-| ANO left / right | Previous / next track |
-| ANO up / down | Pause / resume |
-| Thumb tap | Letter layer (Grippy's alpha chords) |
-| Thumb hold, 0.7 s | Back to the menu layer |
+| ANO wheel | Move the highlight (volume on the now playing screen) |
+| ANO select | Open the album, or play the track |
+| ANO up / down | Back / now playing |
+| ANO left / right | Page up / page down |
+| NeoKey 1 to 4 | Play, pause, reverse, forward |
+| Hold NeoKey 3 / 4 | Rewind / fast-forward, 5 s a step |
+| All 4 NeoKeys | Search |
 
-Menu chords and letters are printed to the serial console for now. They will drive the screen's menus and the jump-to-artist letter search.
+Reverse restarts the track, or goes to the previous one in its first 3 seconds.
 
-## Settings
+Search: NeoKey chords type letters (Grippy's alpha layer), with ANO left as the thumb. The wheel moves through the artists, albums and songs that match, and select jumps there. ANO up, or holding the thumb, leaves search.
 
-| Setting | Default | What it does |
+## The e-ink screen
+
+`lib/fastscreen.py` drives the SSD1680 directly instead of through displayio:
+
+| | displayio (`screen.py`) | `fastscreen.py` |
 |---|---|---|
-| `ALBUM` | a folder on the card | Folder to play |
-| `LEVEL` | 0.5 | Output level, 0.0 to 1.0 |
-| `DAC_DB` | -16 | TLV320 DAC volume in dB at start |
-| `DAC_DB_MIN` | -63 | Lowest volume the wheel reaches; the top is 0 dB |
-| `BUFFER_MS` | 100 | Length of each half of the output buffer |
+| Update | Full 4-gray waveform, flashes | Partial waveform, changed pixels only |
+| Panel between updates | Reset and deep sleep | Stays awake |
+| Main loop held per update | about 100 ms | two 4000-byte SPI writes and the drawing |
+| Colors | 4 grays | Black and white |
 
-## Performance
+A full refresh clears ghosting after 40 partial updates, or once the screen has been still for 30 s. Text is Terminus 18 bold, read from the BDF and stored already rotated into the panel's order, so drawing is only `bitmaptools` blits.
 
-16-bit/44.1 kHz FLAC, read from the card at 24 MHz:
+## 24-bit / 96 kHz
 
-| Measure | Result |
-|---|---|
-| Decode load | 35 to 41% of real time |
-| Slowest frame decode | 63 ms |
-| Underruns, 8 minute track | 0 |
+The TLV320 library's clock table stops at 48 kHz. `set_clocks()` in `lib/frisson.py` sets the PLL and dividers for 88.2 and 96 kHz itself. Output is 16-bit.
 
-The default 64 ms buffer half is too tight, because one frame can take 63 ms to decode, so `code.py` uses 100 ms.
+24/96 only keeps up when the decoder and the audio buffers are in internal SRAM, not PSRAM, so `code.py` loads them in this order:
 
-## Gotcha: reserve the I2S buffers first
+1. `adafruit_flac`, so the decode kernel is in SRAM
+2. the output buffer and the I2S DMA buffers
+3. the decoder, opened on the largest file
+4. everything else
 
-The I2S DMA buffers come from a small internal-RAM heap. If the FLAC decoder and the SD driver load first, `FLACPlayer.play` fails with `RuntimeError: Unable to allocate buffers for signed conversion`. `code.py` creates the `I2SOut` and plays the empty output buffer once, before any other imports, so those buffers are reserved early.
+`adafruit_flac` must be the `.mpy`. As a `.py` it is compiled on the board, and that leaves too little SRAM for the DMA buffers (`RuntimeError: Unable to allocate buffers for signed conversion`).

@@ -48,7 +48,7 @@ Without the landing pad, the same circuit on a breadboard takes 22 jumper wires:
 
 ## Firmware
 
-`firmware/code.py` is a CircuitPython FLAC player: it plays a folder from the microSD card to the headphone jack. See [firmware/README.md](firmware/README.md) for the jumper, pins, libraries and settings.
+`firmware/` is a CircuitPython FLAC player with e-ink menus, up to 24-bit / 96 kHz. Browse with the ANO wheel and NeoKeys, or search by typing chords. See [firmware/README.md](firmware/README.md) for the jumper, pins, libraries and controls.
 
 ## The stand
 

@@ -1,0 +1,263 @@
+# SPDX-FileCopyrightText: 2026 Mikey Sklar
+# SPDX-License-Identifier: MIT-0
+"""Frisson's player: library, DAC, keys, menus and screen. code.py imports it
+after reserving the audio buffers (see code.py for the board and the order).
+"""
+
+import time
+
+import board
+import busio
+import pwmio
+import sdcardio
+import storage
+
+import adafruit_flac
+import adafruit_tlv320
+import chordkeys
+import library
+import menus
+from audiobuf import audio, out_buf
+
+LEVEL = 0.5  # FLACPlayer output level, 0.0 to 1.0
+DAC_DB = -16  # TLV320 DAC volume at start
+DAC_DB_MIN = -63  # wheel range
+DAC_DB_MAX = -6  # loud masters distorted at 0 dB on headphones (10-27)
+MCLK_HZ = 15_000_000
+RESTART_S = 3  # reverse after this far into a track restarts it
+HIGH_RATE = 48000  # above this, no e-ink redraw for QUIET_S after a track starts:
+QUIET_S = 6  # a redraw blocks 0.1 s, longer than a 64 ms half (10-27)
+SCAN_S = 5  # seconds per rewind / fast-forward step (one step every 0.3 s held)
+
+mclk = pwmio.PWMOut(board.D5, frequency=MCLK_HZ, duty_cycle=32768)
+
+# Read the card through the VfsFat object, so CIRCUITPY needs no /sd folder.
+spi = board.SPI()
+sd = sdcardio.SDCard(spi, board.D24, baudrate=24_000_000)
+vfs = storage.VfsFat(sd)
+
+
+def first_track():
+    """The first path in the library index, or None before it is built."""
+    try:
+        with vfs.open(library.INDEX, "r") as f:
+            return f.readline().split("\t")[0]
+    except OSError:
+        return None
+
+
+# The decoder keeps its buffers across files, so open it now, while SRAM is
+# free (step 3 above), on the file with the largest blocks and frames (4608
+# and 22977 bytes, of all 356 tracks, 10-27). Opened on a smaller one, the
+# buffers were reallocated in PSRAM for bigger files.
+BIGGEST = "/Aphex_Twin-Selected_Ambient_Works/12-aphex_twin-12.flac"
+try:
+    path = BIGGEST
+    vfs.stat(path)
+except OSError:
+    path = first_track()
+decoder = adafruit_flac.FLACDecoder(vfs.open(path, "rb")) if path else None
+lib = library.Library(vfs, lambda n, total: n % 50 or print("indexing", n, "of", total))
+print(len(lib.tracks), "tracks,", len(lib.albums), "albums")
+
+# 50 kHz: with the NeoKey and ANO on STEMMA QT, 400 kHz misses devices and can
+# hang the bus (measured 10-27).
+i2c = busio.I2C(board.SCL, board.SDA, frequency=50_000)
+# For about a second after the bus starts, transactions fail (no ACK, or
+# ETIMEDOUT), then it settles. Wait for 10 good reads of the TLV in a row.
+while not i2c.try_lock():
+    pass
+good = 0
+settle_until = time.monotonic() + 3
+while good < 10 and time.monotonic() < settle_until:
+    try:
+        i2c.writeto_then_readfrom(0x18, b"\x00", bytearray(1))
+        good += 1
+    except OSError:
+        good = 0
+i2c.unlock()
+dac = adafruit_tlv320.TLV320DAC3100(i2c)
+
+
+# 88.2 and 96 kHz, which the TLV library's MCLK table stops short of:
+# PLL 15 MHz * J.D to 64 * 16 * rate, NDAC 2, MDAC 8, DOSR 64. That leaves the
+# DAC's DSP MDAC * DOSR = 512 clocks per sample (half rate with DOSR 64 left
+# it 64 and played slow and garbled, 10-27). Processing block 8 is filter B,
+# for rates above 48 kHz.
+HIGH_RATES = {88200: (6, 211), 96000: (6, 5536)}  # J, D
+
+
+def set_clocks(rate):
+    """Set the TLV's clocks for `rate`."""
+    if rate not in HIGH_RATES:
+        dac.configure_clocks(sample_rate=rate, bit_depth=16, mclk_freq=MCLK_HZ)
+        dac._page0._write_register(0x3C, 1)  # processing block 1, filter A
+        return
+    dac.configure_clocks(sample_rate=rate // 2, bit_depth=16, mclk_freq=MCLK_HZ)  # format, muxes
+    j, d = HIGH_RATES[rate]
+    p0 = dac._page0
+    p0._set_bits(0x3F, 0x03, 6, 0b00)  # DACs off
+    p0._write_register(0x05, 0x11)  # PLL off, P 1, R 1
+    p0._write_register(0x06, j)
+    p0._write_register(0x07, d >> 8)
+    p0._write_register(0x08, d & 0xFF)
+    p0._write_register(0x05, 0x91)  # PLL on
+    time.sleep(0.01)
+    p0._write_register(0x0B, 0x82)  # NDAC 2
+    p0._write_register(0x0C, 0x88)  # MDAC 8
+    p0._write_register(0x0D, 0)  # DOSR 64
+    p0._write_register(0x0E, 64)
+    p0._write_register(0x3C, 8)
+    p0._set_bits(0x3F, 0x03, 6, 0b11)
+
+
+class Player:
+    """Plays a queue of library tracks. Menus drives it."""
+
+    def __init__(self):
+        self.flac = adafruit_flac.FLACPlayer(audio, buffer=out_buf, level=LEVEL)
+        self.decoder = decoder
+        self.file = decoder.file if decoder else None  # closed on the first play
+        self.rate = 0
+        self.db = DAC_DB
+        self.queue = []
+        self.pos = 0
+        self.current = None  # library track index
+        self.started = 0
+        self.quiet_until = 0  # no e-ink redraw before this (time.monotonic)
+
+    @property
+    def playing(self):
+        return self.current is not None and not self.flac.paused
+
+    @property
+    def paused(self):
+        return self.current is not None and self.flac.paused
+
+    def position(self):
+        return self.pos + 1, len(self.queue)
+
+    def play(self, queue, pos):
+        self.queue = queue
+        self._start(pos)
+
+    def _start(self, pos):
+        self.flac.stop()
+        if self.file:
+            self.file.close()
+            self.file = None
+        if not 0 <= pos < len(self.queue):
+            self.current = None
+            return
+        self.pos = pos
+        self.current = self.queue[pos]
+        path = lib.tracks[self.current][0]
+        self.file = vfs.open(path, "rb")
+        if self.decoder is None:
+            self.decoder = adafruit_flac.FLACDecoder(self.file)
+        else:
+            self.decoder.open(self.file)
+        d = self.decoder
+        if d.sample_rate != self.rate:
+            self.rate = d.sample_rate
+            set_clocks(self.rate)
+            dac.headphone_output = True
+            dac.dac_volume = self.db
+        print("%s  %d Hz %d-bit %d:%02d" % (path, self.rate, d.source_bits_per_sample,
+                                           d.duration // 60, d.duration % 60))
+        self.flac.play(d)
+        self.started = time.monotonic()
+        self.quiet_until = self.started + QUIET_S if self.rate > HIGH_RATE else 0
+
+    def pause(self):
+        if self.playing:
+            self.flac.pause()
+
+    def resume(self):
+        if self.paused:
+            self.flac.resume()
+
+    def reverse(self):
+        if self.current is None:
+            return
+        if time.monotonic() - self.started > RESTART_S or self.pos == 0:
+            self._start(self.pos)
+        else:
+            self._start(self.pos - 1)
+
+    def forward(self):
+        if self.current is not None:
+            self._start(self.pos + 1)
+
+    def scan(self, direction):
+        """Rewind (-1) or fast-forward (1) one SCAN_S step."""
+        if self.current is None:
+            return
+        d = self.decoder
+        at = d.seek(max(0, d.samples_decoded / self.rate + direction * SCAN_S))
+        self.flac.play(d)  # past the end, this plays silence and update() moves on
+        self.started = time.monotonic() - at  # so reverse() still restarts the track
+
+    def volume(self, steps):
+        self.db = max(DAC_DB_MIN, min(DAC_DB_MAX, self.db + steps))
+        dac.dac_volume = self.db
+
+    def update(self):
+        """Keep the audio fed. Returns True when a track just ended."""
+        if self.current is None:
+            return False
+        self.flac.update()
+        if not self.flac.playing and not self.flac.paused:
+            print("  done, underruns", self.flac.underruns)
+            self._start(self.pos + 1)
+            return True
+        return False
+
+
+player = Player()
+ui = menus.Menus(lib, player)
+
+try:
+    keys = chordkeys.ChordKeys(i2c, thumb=None)
+    print("NeoKey", "found" if keys.neokey else "missing", " ANO", "found" if keys.ano else "missing")
+except ValueError as e:  # neither NeoKey nor ANO plugged in
+    print("no keys:", e)
+    keys = None
+
+try:
+    import fastscreen as screen  # noqa: PLC0415  (screen.py: the 4-gray displayio one)
+
+    eink = screen.EinkScreen(spi)
+except (ImportError, ValueError, RuntimeError) as e:
+    print("no screen:", e)
+    eink = None
+
+if keys is None or keys.neokey is None:  # nothing to choose with: play the first album
+    player.play(lib.albums[0][2], 0)
+    ui.now_playing()
+
+mode = None
+printed = -1
+last = time.monotonic_ns()
+while True:
+    if player.update():
+        ui.version += 1  # next track: the footer and now playing change
+    if keys:
+        events = keys.poll()
+        for kind, value in events:
+            ui.handle(kind, value)
+        if events and eink:
+            eink.poke()
+        if ui.mode != mode:  # search types chords with ANO left as the thumb
+            mode = ui.mode
+            keys.thumb = "left" if mode == "search" else None
+            keys.engine.layer = chordkeys.ALPHA if mode == "search" else chordkeys.MENU
+    if ui.version != printed:
+        printed = ui.version
+        print(ui.text())
+    if eink and time.monotonic() >= player.quiet_until:
+        eink.update(ui)
+    t = time.monotonic_ns()
+    if t - last >= 30_000_000_000:
+        print("  underruns", player.flac.underruns)
+        last = t
