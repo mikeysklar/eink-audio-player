@@ -29,6 +29,8 @@ D5 sends a 15 MHz clock to the TLV320's MCLK pin. The TLV320's PLL locks to it. 
 
 The first start reads every file's tags into `/FRISSON.IDX` on the card. Delete it after changing the music.
 
+For testing, `FRISSON_PLAY = "/Album/01 - Track.flac"` in `settings.toml` plays that track at boot.
+
 ## Files
 
 | File | What it does |
@@ -38,28 +40,23 @@ The first start reads every file's tags into `/FRISSON.IDX` on the card. Delete 
 | `lib/frisson.py` | The player: SD card, DAC clocks, playback, the main loop |
 | `lib/library.py` | Reads FLAC tags and keeps the index |
 | `lib/menus.py` | What every key does, and what the screen shows |
-| `lib/chordkeys.py` | NeoKey and ANO input, with chords from [Grippy](https://github.com/mikeysklar/grippy) |
+| `lib/keys.py` | NeoKey and ANO input, one seesaw read per loop pass |
 | `lib/fastscreen.py` | The e-ink driver, with fast partial updates |
 | `lib/screen.py` | The older 4-gray displayio driver (5.6 s a refresh) |
 | `tools/draw_menus.py` | Draws the menus as PNGs on a computer |
 
 ## Controls
 
-Browse (the default):
-
 | Input | Action |
 |---|---|
 | ANO wheel | Move the highlight (volume on the now playing screen) |
 | ANO select | Open the album, or play the track |
 | ANO up / down | Back / now playing |
-| ANO left / right | Page up / page down |
+| ANO left / right | Page down / page up |
 | NeoKey 1 to 4 | Play, pause, reverse, forward |
 | Hold NeoKey 3 / 4 | Rewind / fast-forward, 5 s a step |
-| All 4 NeoKeys | Search |
 
 Reverse restarts the track, or goes to the previous one in its first 3 seconds.
-
-Search: NeoKey chords type letters (Grippy's alpha layer), with ANO left as the thumb. The wheel moves through the artists, albums and songs that match, and select jumps there. ANO up, or holding the thumb, leaves search.
 
 ## The e-ink screen
 

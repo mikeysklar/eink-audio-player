@@ -38,7 +38,8 @@ TOP = 25  # first row's top
 LINE = 23  # row height
 TAG_X = 46  # text after a tag starts here (4 characters of 10 px)
 COLUMNS = 23  # characters across
-IDLE = 0.15  # seconds of no input before a redraw
+IDLE = 0.05  # gathers a burst of wheel steps into one redraw
+LIVE = 0.3  # during steady input, redraw at least this often (panel permitting)
 FULL_EVERY = 40  # partial updates between full refreshes
 CLEAN_S = 30  # a still screen with ghosting gets a full refresh after this
 
@@ -194,7 +195,9 @@ class EinkScreen:
                 self.partials = 0
                 return True
             return False
-        if not force and now - self.input_at < IDLE:
+        # Wait out a short burst of input, but not a long one: while the wheel
+        # keeps turning, redraw each time the panel is free.
+        if not force and now - self.input_at < IDLE and now - self.changed_at < LIVE:
             return False
         p.keep_old()
         self.draw(menus.view())

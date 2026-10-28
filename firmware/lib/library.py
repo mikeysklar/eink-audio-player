@@ -66,19 +66,6 @@ def _clean(text):
     return " ".join(text.replace("_", " ").split())
 
 
-def _words(text):
-    """Search text: lower case, without "(2010 Remaster)" style asides."""
-    out, depth = [], 0
-    for ch in text:
-        if ch in "([":
-            depth += 1
-        elif ch in ")]":
-            depth = max(0, depth - 1)
-        elif not depth:
-            out.append(ch)
-    return " " + _clean("".join(out)).lower()
-
-
 def _guess(path):
     """Artist, album and title from "/Artist-Album/01-title.flac"."""
     parts = path.split("/")
@@ -93,7 +80,7 @@ def _guess(path):
 
 
 class Library:
-    """Tracks, albums and artists, and a type-ahead search over them.
+    """Tracks and albums.
 
     tracks: list of (path, artist, album, title, number), sorted by artist,
             album, track number, path
@@ -162,37 +149,3 @@ class Library:
                 self.albums[-1][2].append(i)
             else:
                 self.albums.append((t[1], t[2], [i]))
-        self.artists = []
-        for a in self.albums:
-            if not self.artists or self.artists[-1] != a[0]:
-                self.artists.append(a[0])
-        self._keys = None
-
-    def albums_by(self, artist):
-        """Indexes into albums for one artist."""
-        return [i for i, a in enumerate(self.albums) if a[0] == artist]
-
-    def search(self, query, limit=40):
-        """Artists, albums and tracks where some word starts with query.
-
-        Returns a list of ("artist", name), ("album", album index) and
-        ("track", track index), artists first.
-        """
-        q = " " + _clean(query).lower()
-        if len(q) < 2:
-            return []
-        if self._keys is None:  # lower-cased search text, made on first search
-            self._keys = (
-                [_words(a) for a in self.artists],
-                [_words(a[1]) for a in self.albums],
-                [_words(t[3]) for t in self.tracks],
-            )
-        artists, albums, titles = self._keys
-        found = [("artist", self.artists[i]) for i, k in enumerate(artists) if q in k]
-        found += [("album", i) for i, k in enumerate(albums) if q in k]
-        for i, k in enumerate(titles):
-            if len(found) >= limit:
-                break
-            if q in k:
-                found.append(("track", i))
-        return found[:limit]

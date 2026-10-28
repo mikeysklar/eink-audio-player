@@ -48,7 +48,7 @@ Without the landing pad, the same circuit on a breadboard takes 22 jumper wires:
 
 ## Firmware
 
-`firmware/` is a CircuitPython FLAC player with e-ink menus, up to 24-bit / 96 kHz. Browse with the ANO wheel and NeoKeys, or search by typing chords. See [firmware/README.md](firmware/README.md) for the jumper, pins, libraries and controls.
+`firmware/` is a CircuitPython FLAC player with e-ink menus, up to 24-bit / 96 kHz. Browse with the ANO wheel, and play, pause, skip and scan with the NeoKeys. See [firmware/README.md](firmware/README.md) for the jumper, pins, libraries and controls.
 
 ## The stand
 

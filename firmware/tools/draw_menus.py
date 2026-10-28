@@ -147,28 +147,9 @@ def main(index, out):
     shot("3-tracks")
     m.handle("button", "select")
     shot("4-now-playing")
-    m.handle("menu", (1,))
+    m.handle("key", 1)
     m.handle("wheel", -6)
     shot("5-now-paused")
-    m.handle("button", "up")
-    m.handle("menu", (0, 1, 2, 3))
-    shot("6-search-empty")
-    for ch in "sh":
-        m.handle("letter", ch)
-    shot("7-search-sh")
-    for ch in "ad":
-        m.handle("letter", ch)
-    m.handle("wheel", 1)
-    shot("8-search-shad")
-    m.handle("letter", "\b")
-    m.handle("letter", "\b")
-    m.handle("letter", "\b")
-    m.handle("letter", "\b")
-    for ch in "rem":
-        m.handle("letter", ch)
-    shot("9-search-rem")
-    m.handle("button", "select")
-    shot("10-artist")
     print("\n".join(shots))
 
 

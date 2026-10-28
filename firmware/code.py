@@ -4,8 +4,8 @@
 
 Plays the .flac files on the microSD card through the TLV320DAC3100 to the
 headphone jack, with menus on the e-ink screen. lib/menus.py lists what every
-key does: browse with the ANO wheel and the NeoKeys as play / pause / reverse
-/ forward, or press all four NeoKeys and type chords to search.
+key does: browse with the ANO wheel, and the NeoKeys are play / pause /
+reverse / forward.
 
 Board (see kicad/):
   - I2S on A0 BCLK, A1 WSEL, A2 DIN.

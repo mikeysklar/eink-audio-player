@@ -4,7 +4,10 @@
 after reserving the audio buffers (see code.py for the board and the order).
 """
 
+import os
 import time
+
+import microcontroller
 
 import board
 import busio
@@ -14,7 +17,7 @@ import storage
 
 import adafruit_flac
 import adafruit_tlv320
-import chordkeys
+import keys as keypad
 import library
 import menus
 from audiobuf import audio, out_buf
@@ -111,6 +114,22 @@ def set_clocks(rate):
     p0._set_bits(0x3F, 0x03, 6, 0b11)
 
 
+def output_rate(rate):
+    """The sample rate the I2S output really runs at. CircuitPython clocks
+    the PIO at 6 x 32 x rate from the CPU clock with a 1/256 divider, rounded
+    up (ports/raspberrypi/common-hal/rp2pio/StateMachine.c). At 300 MHz, 96 kHz
+    comes out at 95992 Hz, 80 ppm slow. FLACPlayer times the halves from the
+    nominal rate, so it drifts 5 ms a minute, and after about a minute of
+    Zooropa it wrote halves before the output had copied them: clicks, with
+    no underrun counted (10-27)."""
+    f256 = microcontroller.cpu.frequency * 256
+    want = 6 * 32 * rate
+    div = f256 // want
+    if f256 % div:  # the same test as StateMachine.c
+        div += 1
+    return f256 / div / (6 * 32)
+
+
 class Player:
     """Plays a queue of library tracks. Menus drives it."""
 
@@ -162,12 +181,19 @@ class Player:
             self.rate = d.sample_rate
             set_clocks(self.rate)
             dac.headphone_output = True
+            dac.speaker_output = False  # class-D amp off, nothing on it
             dac.dac_volume = self.db
         print("%s  %d Hz %d-bit %d:%02d" % (path, self.rate, d.source_bits_per_sample,
                                            d.duration // 60, d.duration % 60))
-        self.flac.play(d)
+        self._play()
         self.started = time.monotonic()
         self.quiet_until = self.started + QUIET_S if self.rate > HIGH_RATE else 0
+
+    def _play(self):
+        f = self.flac
+        f.play(self.decoder)
+        # time the halves from the real output rate (see output_rate)
+        f._half_ns = int(f._half // self.decoder.channel_count * 1e9 / output_rate(self.rate))
 
     def pause(self):
         if self.playing:
@@ -195,7 +221,7 @@ class Player:
             return
         d = self.decoder
         at = d.seek(max(0, d.samples_decoded / self.rate + direction * SCAN_S))
-        self.flac.play(d)  # past the end, this plays silence and update() moves on
+        self._play()  # past the end, this plays silence and update() moves on
         self.started = time.monotonic() - at  # so reverse() still restarts the track
 
     def volume(self, steps):
@@ -218,7 +244,7 @@ player = Player()
 ui = menus.Menus(lib, player)
 
 try:
-    keys = chordkeys.ChordKeys(i2c, thumb=None)
+    keys = keypad.Keys(i2c)
     print("NeoKey", "found" if keys.neokey else "missing", " ANO", "found" if keys.ano else "missing")
 except ValueError as e:  # neither NeoKey nor ANO plugged in
     print("no keys:", e)
@@ -232,11 +258,17 @@ except (ImportError, ValueError, RuntimeError) as e:
     print("no screen:", e)
     eink = None
 
-if keys is None or keys.neokey is None:  # nothing to choose with: play the first album
-    player.play(lib.albums[0][2], 0)
+start = os.getenv("FRISSON_PLAY")  # settings.toml: a track to play at boot, for testing
+for album in lib.albums if start else ():
+    queue = album[2]
+    for n, i in enumerate(queue):
+        if lib.tracks[i][0] == start:
+            player.play(queue, n)
+            ui.now_playing()
+if player.current is None and (keys is None or keys.neokey is None):
+    player.play(lib.albums[0][2], 0)  # nothing to choose with: play the first album
     ui.now_playing()
 
-mode = None
 printed = -1
 last = time.monotonic_ns()
 while True:
@@ -248,10 +280,6 @@ while True:
             ui.handle(kind, value)
         if events and eink:
             eink.poke()
-        if ui.mode != mode:  # search types chords with ANO left as the thumb
-            mode = ui.mode
-            keys.thumb = "left" if mode == "search" else None
-            keys.engine.layer = chordkeys.ALPHA if mode == "search" else chordkeys.MENU
     if ui.version != printed:
         printed = ui.version
         print(ui.text())
